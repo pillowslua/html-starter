@@ -17,7 +17,7 @@
             --text-color: #E0E0E0;
             --heading-color: #FFFFFF;
             --accent-color: #007BFF; /* A vibrant blue */
-            --gradient-start: #673AB7; /* Deep purple for buttons */
+            --gradient-start: #673AB7; /* Deep purple for buttons (if any re-added) */
             --gradient-end: #512DA8;
             --border-radius-large: 18px;
             --border-radius-medium: 12px;
@@ -192,6 +192,19 @@
             background: #444444;
             color: var(--text-color);
         }
+        
+        .bot-message.typing-indicator {
+            background: #444444;
+            color: #B0B0B0;
+            font-style: italic;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0.8; }
+        }
 
         .input-area {
             display: flex;
@@ -307,6 +320,12 @@
         }
 
         /* --- Contacts Section --- */
+        .contacts-section .product-buttons { /* Re-using product-buttons for layout, but with custom styles */
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
         .contacts-section .contact-button { /* More generic naming */
             display: flex;
             align-items: center;
@@ -334,36 +353,9 @@
         .contact-button.discord:hover { background: #8e9ddf; transform: translateY(-3px); }
 
 
-        /* --- Kin HUB PREMIUM Button (Floating) --- */
-        #kinhub-premium-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: auto;
-            padding: 15px 30px;
-            height: auto;
-            background: linear-gradient(145deg, var(--gradient-start), var(--gradient-end)); /* Deep purple gradient */
-            border-radius: var(--border-radius-medium); /* Slightly more rounded rectangle */
-            box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 15px rgba(103, 58, 183, 0.4); /* Deeper shadow and a purple glow */
-            z-index: 10000;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #FFF;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        #kinhub-premium-button:hover {
-            background: linear-gradient(145deg, #7E57C2, var(--gradient-start));
-            box-shadow: 0 10px 35px rgba(0,0,0,0.7), 0 0 20px rgba(126, 87, 194, 0.6);
-            transform: translateY(-2px);
-        }
+        /* --- Floating Button (if any) ---
+           Removed #kinhub-premium-button from here
+        */
 
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
@@ -388,12 +380,7 @@
                 max-width: 100%;
                 width: 100%;
             }
-            #kinhub-premium-button {
-                bottom: 20px;
-                right: 20px;
-                padding: 12px 20px;
-                font-size: 1em;
-            }
+            /* Removed #kinhub-premium-button responsive styles */
             .chat-box {
                 height: 300px; /* Adjust chat height for smaller screens */
             }
@@ -429,12 +416,16 @@
             <div class="chat-box">
                 <div class="messages" id="chatMessages">
                     <div class="message bot-message">Hello! I'm Kinz's AI. How can I assist you today?</div>
+                    <div class="message bot-message chat-disclaimer">
+                        **IMPORTANT SECURITY NOTE:** This is a static demo. Connecting to a real AI API like OpenAI requires a **backend server** to protect your API key.
+                        Putting your API key directly in client-side code (like this HTML file) is **highly insecure** and can lead to financial loss if exposed.
+                        This chat will only respond with pre-defined messages or simulated searches.
+                    </div>
                 </div>
                 <div class="input-area">
                     <input type="text" id="chatInput" placeholder="Type your message...">
                     <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
                 </div>
-                <p class="chat-disclaimer">Note: This is a static demo. Advanced AI functionality (like real-time learning or external API calls) is not implemented here.</p>
             </div>
         </section>
 
@@ -445,15 +436,15 @@
                 <input type="text" id="tokenSeedInput" placeholder="Enter text (optional, for custom seed)">
                 <button id="generateTokenBtn"><i class="fas fa-magic"></i> Generate Token</button>
                 <div class="generated-token" id="generatedToken">Your token will appear here.</div>
-                <p class="token-note">Generates a random token from a predefined list.<br>Source: <a href="YOUR_RAW_GITHUB_URL_HERE" target="_blank">Raw GitHub File</a></p>
-                <p class="token-note">**IMPORTANT:** Replace 'YOUR_RAW_GITHUB_URL_HERE' with your actual raw GitHub file link (e.g., `https://raw.githubusercontent.com/tuanhaideptrai/Kin-HUB-IDs/main/ids.txt`).</p>
+                <p class="token-note">Generates a random token from a predefined list.<br>Source: <a href="YOUR_RAW_GITHUB_URL_HERE" target="_blank" id="githubRawLink">Raw GitHub File</a></p>
+                <p class="token-note">**IMPORTANT:** Replace 'YOUR_RAW_GITHUB_URL_HERE' in the script with your actual raw GitHub file link (e.g., `https://raw.githubusercontent.com/tuanhaideptrai/Kin-HUB-IDs/main/ids.txt`).</p>
             </div>
         </section>
 
         <!-- Contacts Section -->
         <section class="contacts-section">
             <h2>Contacts</h2>
-            <div class="product-buttons"> <!-- Re-using product-buttons for layout, but with custom styles -->
+            <div class="product-buttons">
                 <a href="https://www.facebook.com/tuanhaideptrai" target="_blank" class="contact-button facebook">
                     <i class="fab fa-facebook"></i> Facebook
                 </a>
@@ -470,8 +461,7 @@
         </section>
     </div>
 
-    <!-- Kin HUB PREMIUM Floating Button -->
-    <div id="kinhub-premium-button">Kin HUB PREMIUM</div>
+    <!-- Removed #kinhub-premium-button -->
 
     <script defer>
         document.addEventListener('DOMContentLoaded', () => {
@@ -481,18 +471,61 @@
             const generateTokenBtn = document.getElementById('generateTokenBtn');
             const generatedTokenDiv = document.getElementById('generatedToken');
             const tokenSeedInput = document.getElementById('tokenSeedInput');
-            const kithubPremiumButton = document.getElementById('kinhub-premium-button');
+            const githubRawLink = document.getElementById('githubRawLink');
 
-            // --- AI Chat Simulation (Enhanced) ---
-            const addMessage = (text, sender) => {
+            // --- IMPORTANT: CONFIGURE YOUR GITHUB RAW URL HERE ---
+            const GITHUB_RAW_URL = "https://raw.githubusercontent.com/tuanhaideptrai/Kin-HUB-IDs/main/ids.txt"; // REMEMBER TO CHANGE THIS TO YOUR ACTUAL RAW GITHUB FILE LINK!
+            if (githubRawLink) githubRawLink.href = GITHUB_RAW_URL; // Update link in HTML
+
+            // --- AI Chat Simulation (Enhanced & Ready for API Integration) ---
+            const addMessage = (text, sender, isTyping = false) => {
                 const msgDiv = document.createElement('div');
                 msgDiv.classList.add('message', `${sender}-message`);
-                msgDiv.textContent = text;
+                if (isTyping) {
+                    msgDiv.classList.add('typing-indicator');
+                    msgDiv.textContent = 'AI is typing...';
+                } else {
+                    msgDiv.textContent = text;
+                }
                 chatMessages.appendChild(msgDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight; // Auto scroll to bottom
+                return msgDiv; // Return element to modify later if it's a typing indicator
             };
 
-            const getBotResponse = (userMessage) => {
+            // This is a placeholder for your backend API endpoint
+            // Example if you use Node.js Express: "http://localhost:3000/api/chat"
+            // You MUST build a backend server to handle this securely.
+            const YOUR_BACKEND_API_URL = "YOUR_BACKEND_API_URL_HERE"; // <--- REPLACE THIS WITH YOUR ACTUAL BACKEND API URL
+
+            const callOpenAIAPI = async (message) => {
+                // IMPORTANT: This part assumes you have a backend server at YOUR_BACKEND_API_URL
+                // that handles the actual call to OpenAI API using your secret API key.
+                // DO NOT put your OpenAI API Key directly in this client-side code.
+
+                try {
+                    const response = await fetch(YOUR_BACKEND_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // No API Key here! Your backend handles authentication.
+                        },
+                        body: JSON.stringify({ prompt: message }),
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Backend Error: ${errorData.message || response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    return data.response; // Assuming your backend sends { response: "AI's reply" }
+                } catch (error) {
+                    console.error("Error calling backend API:", error);
+                    return `Error: Could not connect to the AI (API issue). Please ensure the backend server is running and configured correctly. Details: ${error.message}`;
+                }
+            };
+
+            const getSimulatedBotResponse = (userMessage) => {
                 const msg = userMessage.toLowerCase();
 
                 // General Greetings & Farewell
@@ -571,19 +604,29 @@
                 }
 
                 // Fallback / I don't understand
-                return "I'm sorry, I don't fully understand that question. Could you please rephrase it or ask something else? I am a static demo AI.";
+                return "I'm sorry, I don't fully understand that question. Could you please rephrase it or ask something else? This is a static demo AI.";
             };
 
-            const handleChatInput = () => {
+            const handleChatInput = async () => {
                 const userText = chatInput.value.trim();
                 if (userText) {
                     addMessage(userText, 'user');
                     chatInput.value = '';
 
-                    setTimeout(() => {
-                        const botResponse = getBotResponse(userText);
-                        addMessage(botResponse, 'bot');
-                    }, 800); // Simulate processing time
+                    const typingMessage = addMessage('', 'bot', true); // Add typing indicator
+
+                    // Simulate waiting for API or process simulated response
+                    setTimeout(async () => {
+                        let botResponse;
+                        // --- INTEGRATION POINT ---
+                        // If you have a backend, UNCOMMENT the line below and comment out getSimulatedBotResponse
+                        // botResponse = await callOpenAIAPI(userText);
+                        // Otherwise, use the simulated response
+                        botResponse = getSimulatedBotResponse(userText); // Simulated response
+
+                        typingMessage.textContent = botResponse; // Update the typing message with actual response
+                        typingMessage.classList.remove('typing-indicator'); // Remove typing class
+                    }, 800); // Simulate network/processing delay
                 }
             };
 
@@ -595,9 +638,6 @@
             });
 
             // --- Online Token Generator ---
-            // IMPORTANT: Replace this with your actual raw GitHub URL
-            const GITHUB_RAW_URL = "YOUR_RAW_GITHUB_URL_HERE"; // Example: "https://raw.githubusercontent.com/tuanhaideptrai/Kin-HUB-IDs/main/ids.txt";
-
             const fetchRandomIdFromGithub = async (url) => {
                 try {
                     const response = await fetch(url);
@@ -625,17 +665,15 @@
                 const seed = tokenSeedInput.value.trim();
 
                 if (seed) {
-                    // Simple hash simulation if seed is provided
-                    token = 'CUSTOM_SEED_' + btoa(seed).substring(0, 16); // Base64 encode and truncate
+                    token = 'CUSTOM_SEED_' + btoa(seed).substring(0, 16); // Simple Base64 hash simulation
                 } else {
-                    // Fetch from GitHub if no seed
                     token = await fetchRandomIdFromGithub(GITHUB_RAW_URL);
                 }
 
-                if (token.startsWith("Error")) {
+                if (token.startsWith("Error") || token.startsWith("N/A")) {
                     generatedTokenDiv.classList.add('error');
-                } else if (token.startsWith("N/A")) {
-                     generatedTokenDiv.classList.add('error');
+                } else {
+                    generatedTokenDiv.classList.remove('error');
                 }
                 generatedTokenDiv.textContent = token;
             });
@@ -643,15 +681,16 @@
 
         // =======================================================
         // Website Optimization Notes:
-        // 1.  **Google Fonts & Font Awesome:** Linked via CDN for convenience. For production, consider self-hosting or preloading if performance is critical.
-        // 2.  **CSS Inlining:** For a single, small page like this, inlining CSS directly in the <style> tag reduces HTTP requests, improving initial render.
-        // 3.  **JavaScript Defer:** The <script defer> tag ensures the script executes after the HTML is parsed, preventing render-blocking.
-        // 4.  **Responsive Design:** Basic media queries are included to ensure readability and usability on smaller screens (mobile-friendly).
+        // 1.  **Google Fonts & Font Awesome:** Linked via CDN. For production, consider self-hosting or preloading for critical performance.
+        // 2.  **CSS Inlining:** For a single, small page, inlining CSS directly in the <style> tag reduces HTTP requests.
+        // 3.  **JavaScript Defer:** The <script defer> tag ensures the script executes after HTML is parsed, preventing render-blocking.
+        // 4.  **Responsive Design:** Basic media queries ensure readability and usability on smaller screens (mobile-friendly).
         // 5.  **Minimalist Approach:** Avoiding heavy frameworks or excessive libraries keeps the page lightweight and fast.
-        // 6.  **Semantic HTML:** Using appropriate HTML5 tags (e.g., <section>, <a>, <button>) for better structure and accessibility.
+        // 6.  **Semantic HTML:** Using appropriate HTML5 tags for better structure and accessibility.
         // 7.  **CSS Variables:** Using CSS variables for colors, fonts, and sizes makes theme changes and consistency easier.
-        // 8.  **Smooth Scrolling (CSS):** `scroll-behavior: smooth` for chat messages offers a better user experience without extra JS.
-        // 9.  **Clickable Areas:** Ensuring buttons and links have clear hover/active states for user feedback.
+        // 8.  **Smooth Scrolling (CSS):** `scroll-behavior: smooth` for chat messages offers a better user experience.
+        // 9.  **Security for API Keys:** As explained in the chat, *never* expose sensitive API keys in client-side code. Always use a backend proxy.
+        // 10. **Script Obfuscation:** Does *not* protect API keys or sensitive data. It only makes code harder to read but is reversible.
         // =======================================================
     </script>
 </body>
