@@ -1,548 +1,658 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinAI - Trợ lý Coder của Kin!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <title>Kinz - Developer | Bio Page</title>
+    <!-- Google Fonts for modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap" rel="stylesheet"> <!-- For token ID -->
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #007bff; /* Màu xanh dương của KinAI */
-            --secondary-color: #28a745; /* Màu xanh lá cây phụ đạo */
-            --text-color: #333;
-            --bg-color: #e9ecef;
-            --card-bg: #fff;
-            --border-radius: 12px;
-            --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            --transition-speed: 0.3s;
+            --primary-bg: #1A1A1A;
+            --secondary-bg: #2B2B2B;
+            --card-bg: #333333;
+            --text-color: #E0E0E0;
+            --heading-color: #FFFFFF;
+            --accent-color: #007BFF; /* A vibrant blue */
+            --gradient-start: #673AB7; /* Deep purple for buttons */
+            --gradient-end: #512DA8;
+            --border-radius-large: 18px;
+            --border-radius-medium: 12px;
+            --border-radius-small: 8px;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.2);
+            --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --shadow-deep: 0 12px 40px rgba(0, 0, 0, 0.6);
+
+            /* Notification Colors */
+            --notify-info: #FFD700;    /* Yellow */
+            --notify-success: #4CAF50; /* Green */
+            --notify-error: #F44336;   /* Red */
         }
 
         body {
-            font-family: 'Quicksand', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top */
+            min-height: 100vh;
+            overflow-y: auto; /* Enable scrolling for the body */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 25px;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-deep);
             display: flex;
             flex-direction: column;
+            gap: 30px; /* Space between sections */
+        }
+
+        /* --- Section Styling --- */
+        section {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--shadow-medium);
+            text-align: center;
+        }
+
+        section h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--heading-color);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        /* --- Bio Section --- */
+        .bio-section .avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, var(--accent-color), #FF0077); /* Avatar gradient */
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow-light);
+            border: 3px solid var(--primary-bg);
+            transition: transform 0.3s ease-in-out;
+            /* Add image for avatar if desired */
+            /* background-image: url('your-avatar.jpg'); */
+            /* background-size: cover; */
+            /* background-position: center; */
+        }
+        .bio-section .avatar:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .bio-section h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8em;
+            color: var(--heading-color);
+            margin: 0 0 5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .bio-section .role {
+            font-size: 1.2em;
+            color: var(--accent-color);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .bio-section .tagline {
+            font-size: 1em;
+            color: var(--text-color);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* --- Products Section --- */
+        .products-section .product-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        .product-button {
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--bg-color), #cfe2f3);
-            margin: 0;
-            color: var(--text-color);
-            overflow: hidden;
-            position: relative;
+            gap: 10px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--accent-color), #00A2FF);
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: var(--border-radius-small);
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease-in-out;
         }
 
-        /* Background Blobs (đổi màu cho hợp với KinAI) */
-        body::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            width: 200px;
-            height: 200px;
-            background: var(--secondary-color);
-            border-radius: 50%;
-            opacity: 0.1;
-            filter: blur(80px);
-            animation: moveBlob1 15s infinite alternate;
+        .product-button:hover {
+            background: linear-gradient(135deg, #00A2FF, var(--accent-color));
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.5);
+            transform: translateY(-3px);
         }
 
-        body::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            right: -50px;
-            width: 250px;
-            height: 250px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            opacity: 0.1;
-            filter: blur(100px);
-            animation: moveBlob2 20s infinite alternate;
-        }
-
-        @keyframes moveBlob1 {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(100px, 150px); }
-            100% { transform: translate(0, 0); }
-        }
-
-        @keyframes moveBlob2 {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(-100px, -150px); }
-            100% { transform: translate(0, 0); }
-        }
-
-        /* Chat Container */
-        .chat-container {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            width: 90%;
-            max-width: 600px;
-            height: 70vh; /* Chiều cao cố định */
+        /* --- AI Chat Section --- */
+        .chat-box {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-small);
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            z-index: 1;
+            gap: 10px;
+            height: 400px; /* Increased height for chat area */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            position: relative; /* For gradient at bottom */
         }
 
-        /* Chat Header */
-        .chat-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px 20px;
-            border-top-left-radius: var(--border-radius);
-            border-top-right-radius: var(--border-radius);
-            font-size: 1.5em;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        /* Chat Messages Area */
-        .chat-messages {
+        .messages {
             flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto; /* Cuộn khi có nhiều tin nhắn */
-            background-color: #f9f9f9;
+            overflow-y: auto;
+            padding-right: 10px; /* Space for scrollbar */
+            scroll-behavior: smooth;
         }
 
-        .message-bubble {
-            display: flex;
-            margin-bottom: 15px;
-            align-items: flex-end; /* Căn chỉnh bong bóng tin nhắn */
-        }
-
-        .message-bubble.user {
-            justify-content: flex-end; /* Tin nhắn người dùng nằm bên phải */
-        }
-
-        .message-bubble.bot {
-            justify-content: flex-start; /* Tin nhắn bot nằm bên trái */
-        }
-
-        .message-content {
-            padding: 12px 18px;
-            border-radius: 20px;
-            max-width: 70%;
+        .message {
+            background: var(--card-bg);
+            padding: 10px 15px;
+            border-radius: var(--border-radius-small);
+            margin-bottom: 8px;
+            max-width: 80%;
+            text-align: left;
+            word-wrap: break-word; /* Ensure long words wrap */
             line-height: 1.4;
-            word-wrap: break-word; /* Xuống dòng nếu quá dài */
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            transition: all var(--transition-speed) ease;
-            transform: translateY(10px);
-            opacity: 0;
-            animation: slideIn 0.3s forwards;
-        }
-        
-        @keyframes slideIn {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
-        .message-bubble.user .message-content {
-            background-color: var(--primary-color);
-            color: white;
-            border-bottom-right-radius: 5px; /* Góc vuông nhẹ */
+        .user-message {
+            margin-left: auto;
+            background: var(--accent-color);
+            color: #FFFFFF;
         }
 
-        .message-bubble.bot .message-content {
-            background-color: #e0e0e0;
+        .bot-message {
+            margin-right: auto;
+            background: #444444;
             color: var(--text-color);
-            border-bottom-left-radius: 5px; /* Góc vuông nhẹ */
         }
 
-        /* Chat Input Area */
-        .chat-input {
+        .input-area {
             display: flex;
-            padding: 15px 20px;
-            border-top: 1px solid #eee;
-            background-color: var(--card-bg);
-            border-bottom-left-radius: var(--border-radius);
-            border-bottom-right-radius: var(--border-radius);
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #444; /* Separator for input */
         }
 
-        .chat-input input[type="text"] {
+        .input-area input {
             flex-grow: 1;
-            padding: 12px 18px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            font-size: 1.1em;
-            margin-right: 10px;
-            transition: border-color 0.3s ease;
-        }
-
-        .chat-input input[type="text"]:focus {
-            border-color: var(--primary-color);
+            padding: 12px 15px;
+            border: none;
+            background: #444444;
+            color: var(--text-color);
+            border-radius: var(--border-radius-small);
+            font-size: 1em;
             outline: none;
         }
 
-        .chat-input button {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px 20px;
+        .input-area button {
+            background: var(--accent-color);
+            color: #FFFFFF;
             border: none;
-            border-radius: 25px;
+            padding: 12px 20px;
+            border-radius: var(--border-radius-small);
             cursor: pointer;
             font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        .input-area button:hover {
+            background: #0090FF;
+        }
+
+        .chat-disclaimer {
+            font-size: 0.85em;
+            color: #AAAAAA;
+            margin-top: 10px;
+        }
+
+        /* --- Token Generator Section --- */
+        .token-tool {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: var(--border-radius-small);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .token-tool input {
+            width: calc(100% - 30px); /* Adjust for padding */
+            padding: 12px 15px;
+            border: 1px solid #555;
+            background: #444444;
+            color: var(--text-color);
+            border-radius: var(--border-radius-small);
+            font-size: 1em;
+            outline: none;
+        }
+
+        .token-tool button {
+            background: linear-gradient(135deg, #FF6F00, #FF3D00); /* Orange gradient */
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 25px;
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(255, 111, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+        .token-tool button:hover {
+            background: linear-gradient(135deg, #FF3D00, #FF6F00);
+            box-shadow: 0 8px 20px rgba(255, 111, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .generated-token {
+            background: #222222;
+            color: #00FFC0; /* Teal/Cyan for token */
+            padding: 15px;
+            border-radius: var(--border-radius-small);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            word-break: break-all; /* Break long tokens */
+            text-align: center;
+            border: 1px dashed #555;
+        }
+        .generated-token.error {
+            color: var(--notify-error);
+        }
+
+        .token-note {
+            font-size: 0.8em;
+            color: #AAAAAA;
+            margin-top: 5px;
+        }
+        .token-note a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        .token-note a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Contacts Section --- */
+        .contacts-section .contact-button { /* More generic naming */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: var(--accent-color); /* Base color, can be customized per social media */
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: var(--border-radius-small);
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Specific social media colors for contact buttons */
+        .contact-button.facebook { background: #3b5998; box-shadow: 0 5px 15px rgba(59, 89, 152, 0.3); }
+        .contact-button.facebook:hover { background: #4c70ba; transform: translateY(-3px); }
+        .contact-button.github { background: #333; box-shadow: 0 5px 15px rgba(51, 51, 51, 0.3); }
+        .contact-button.github:hover { background: #555; transform: translateY(-3px); }
+        .contact-button.zalo { background: #0080FF; box-shadow: 0 5px 15px rgba(0, 128, 255, 0.3); }
+        .contact-button.zalo:hover { background: #1a9cff; transform: translateY(-3px); }
+        .contact-button.discord { background: #7289DA; box-shadow: 0 5px 15px rgba(114, 137, 218, 0.3); }
+        .contact-button.discord:hover { background: #8e9ddf; transform: translateY(-3px); }
+
+
+        /* --- Kin HUB PREMIUM Button (Floating) --- */
+        #kinhub-premium-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: auto;
+            padding: 15px 30px;
+            height: auto;
+            background: linear-gradient(145deg, var(--gradient-start), var(--gradient-end)); /* Deep purple gradient */
+            border-radius: var(--border-radius-medium); /* Slightly more rounded rectangle */
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 15px rgba(103, 58, 183, 0.4); /* Deeper shadow and a purple glow */
+            z-index: 10000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
             font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            color: #FFF;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            text-align: center;
         }
 
-        .chat-input button:hover {
-            background-color: #0056b3; /* Màu hover cho primary */
-            transform: translateY(-1px);
+        #kinhub-premium-button:hover {
+            background: linear-gradient(145deg, #7E57C2, var(--gradient-start));
+            box-shadow: 0 10px 35px rgba(0,0,0,0.7), 0 0 20px rgba(126, 87, 194, 0.6);
+            transform: translateY(-2px);
         }
 
-        .chat-input button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-
-        /* Loading Spinner for bot thinking */
-        .bot-thinking {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 15px;
-        }
-        .bot-thinking .spinner {
-            width: 20px;
-            height: 20px;
-            margin-right: 0;
-            border-color: rgba(0, 123, 255, 0.3); /* Màu spinner hợp với primary */
-            border-left-color: var(--primary-color);
-            animation: spin 0.8s linear infinite;
-        }
-        .bot-thinking .message-content {
-            background-color: #e0e0e0;
-            opacity: 1;
-            transform: translateY(0);
-            box-shadow: none; /* remove shadow for thinking dots */
-            display: flex;
-            align-items: center;
-        }
-        .typing-dots {
-            display: flex;
-            align-items: center;
-            padding-left: 5px;
-        }
-        .typing-dots span {
-            width: 6px;
-            height: 6px;
-            background-color: var(--text-color);
-            border-radius: 50%;
-            margin: 0 2px;
-            animation: bounce 1s infinite ease-in-out;
-        }
-        .typing-dots span:nth-child(2) { animation-delay: 0.1s; }
-        .typing-dots span:nth-child(3) { animation-delay: 0.2s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-5px); }
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+                padding: 15px;
+                gap: 20px;
+            }
+            section {
+                padding: 20px;
+            }
+            section h2 {
+                font-size: 1.5em;
+            }
+            .bio-section h1 {
+                font-size: 2em;
+            }
+            .product-buttons, .contacts-section .product-buttons {
+                flex-direction: column; /* Stack buttons on small screens */
+            }
+            .product-button, .contacts-section .contact-button {
+                max-width: 100%;
+                width: 100%;
+            }
+            #kinhub-premium-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            .chat-box {
+                height: 300px; /* Adjust chat height for smaller screens */
+            }
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            KinAI - Trợ lý Coder của Kin!
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <!-- Messages will appear here -->
-            <div class="message-bubble bot">
-                <div class="message-content">
-                    Chào bro! Tui là KinAI, trợ lý đắc lực của Kin. Hỏi gì về code, project hay developer life, cứ quăng đây! =))
-                </div>
+    <div class="container">
+        <!-- Bio Section -->
+        <section class="bio-section">
+            <div class="avatar"></div>
+            <h1>Kinz</h1>
+            <p class="role">Developer</p>
+            <p class="tagline">Crafting digital experiences with passion and precision.</p>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products-section">
+            <h2>My Products</h2>
+            <div class="product-buttons">
+                <a href="https://github.com/KinzDev/ProductOne" target="_blank" class="product-button">
+                    <i class="fas fa-box"></i> Product One
+                </a>
+                <a href="https://github.com/KinzDev/ProductTwo" target="_blank" class="product-button">
+                    <i class="fas fa-cube"></i> Product Two
+                </a>
             </div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="userInput" placeholder="Gõ tin nhắn của bro vào đây..." autofocus>
-            <button id="sendButton">Gửi</button>
-        </div>
+        </section>
+
+        <!-- AI Chat Section -->
+        <section class="ai-chat-section">
+            <h2>Chat with My AI</h2>
+            <div class="chat-box">
+                <div class="messages" id="chatMessages">
+                    <div class="message bot-message">Hello! I'm Kinz's AI. How can I assist you today?</div>
+                </div>
+                <div class="input-area">
+                    <input type="text" id="chatInput" placeholder="Type your message...">
+                    <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                <p class="chat-disclaimer">Note: This is a static demo. Advanced AI functionality (like real-time learning or external API calls) is not implemented here.</p>
+            </div>
+        </section>
+
+        <!-- Token Generator Section -->
+        <section class="token-generator-section">
+            <h2>Online Token Generator</h2>
+            <div class="token-tool">
+                <input type="text" id="tokenSeedInput" placeholder="Enter text (optional, for custom seed)">
+                <button id="generateTokenBtn"><i class="fas fa-magic"></i> Generate Token</button>
+                <div class="generated-token" id="generatedToken">Your token will appear here.</div>
+                <p class="token-note">Generates a random token from a predefined list.<br>Source: <a href="YOUR_RAW_GITHUB_URL_HERE" target="_blank">Raw GitHub File</a></p>
+                <p class="token-note">**IMPORTANT:** Replace 'YOUR_RAW_GITHUB_URL_HERE' with your actual raw GitHub file link (e.g., `https://raw.githubusercontent.com/tuanhaideptrai/Kin-HUB-IDs/main/ids.txt`).</p>
+            </div>
+        </section>
+
+        <!-- Contacts Section -->
+        <section class="contacts-section">
+            <h2>Contacts</h2>
+            <div class="product-buttons"> <!-- Re-using product-buttons for layout, but with custom styles -->
+                <a href="https://www.facebook.com/tuanhaideptrai" target="_blank" class="contact-button facebook">
+                    <i class="fab fa-facebook"></i> Facebook
+                </a>
+                <a href="https://github.com/tuanhaideptrai" target="_blank" class="contact-button github">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://zalo.me/your_zalo_id_here" target="_blank" class="contact-button zalo">
+                    <i class="fas fa-comment-dots"></i> Zalo
+                </a>
+                <a href="https://discord.com/invite/SfFayNKxUE" target="_blank" class="contact-button discord">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+            </div>
+        </section>
     </div>
 
-    <script>
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
-        const sendButton = document.getElementById('sendButton');
+    <!-- Kin HUB PREMIUM Floating Button -->
+    <div id="kinhub-premium-button">Kin HUB PREMIUM</div>
 
-        // Hàm thêm tin nhắn vào khung chat
-        function addMessage(sender, text) {
-            const messageBubble = document.createElement('div');
-            messageBubble.classList.add('message-bubble', sender);
-            
-            const messageContent = document.createElement('div');
-            messageContent.classList.add('message-content');
-            messageContent.innerHTML = text; 
-            
-            messageBubble.appendChild(messageContent);
-            chatMessages.appendChild(messageBubble);
+    <script defer>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatMessages = document.getElementById('chatMessages');
+            const chatInput = document.getElementById('chatInput');
+            const sendChatBtn = document.getElementById('sendChatBtn');
+            const generateTokenBtn = document.getElementById('generateTokenBtn');
+            const generatedTokenDiv = document.getElementById('generatedToken');
+            const tokenSeedInput = document.getElementById('tokenSeedInput');
+            const kithubPremiumButton = document.getElementById('kinhub-premium-button');
 
-            // Cuộn xuống cuối khung chat tự động
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+            // --- AI Chat Simulation (Enhanced) ---
+            const addMessage = (text, sender) => {
+                const msgDiv = document.createElement('div');
+                msgDiv.classList.add('message', `${sender}-message`);
+                msgDiv.textContent = text;
+                chatMessages.appendChild(msgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Auto scroll to bottom
+            };
 
-        // Dữ liệu "trí tuệ" của KinAI - Giờ nó phức tạp hơn rồi đó bro!
-        // Mỗi mục có thể có nhiều pattern (dạng Regex để linh hoạt hơn) và nhiều câu trả lời (để ngẫu nhiên)
-        // Ưu tiên các pattern cụ thể hơn đặt lên đầu
-        const aiKnowledge = [
-            // --- Chủ đề Kin ---
-            {
-                patterns: [
-                    /kin hub/i, 
-                    /project kin/i, 
-                    /dự án kin/i, 
-                    /kin của ông/i
-                ],
-                responses: [
-                    "À, Kin Hub là dự án tâm huyết của Kin đó bro! Nơi ấp ủ những ý tưởng code bá đạo. Bro cứ chờ xem, sẽ có nhiều điều hay ho lắm đó!",
-                    "Kin Hub hả? Đó là project 'đinh' của Kin đó. Cứ yên tâm là sẽ có những tính năng độc đáo mà bro chưa từng thấy luôn!",
-                    "Project Kin Hub đang được Kin cày ngày cày đêm đó bro. Sắp ra mắt rồi, chuẩn bị đón nhận siêu phẩm đi nha! :v"
-                ]
-            },
-            {
-                patterns: [
-                    /kin là ai/i, 
-                    /ai là kin/i, 
-                    /kin làm gì/i, 
-                    /developer kin/i
-                ],
-                responses: [
-                    "Kin là người tạo ra tui đó bro! Một Developer 'chính hiệu', Coder 'tay to' và là chủ nhân của Kin Hub.",
-                    "Kin á? Là phù thủy code đó bro. Gõ phím cái là ra ngay mấy cái tool hay ho, mấy cái project xịn sò luôn! Tui là trợ lý của Kin đây.",
-                    "Kin là Developer xịn nhất tui từng biết! Đừng hỏi nhiều, cứ xem Kin Hub là biết độ 'pro' liền! =))"
-                ]
-            },
-            {
-                patterns: [
-                    /kênh của kin/i,
-                    /discord của kin/i
-                ],
-                responses: [
-                    "Hiện tại Kin chưa có kênh Discord hay YouTube riêng đâu bro, nhưng nếu có thì tui sẽ báo liền nha! Giờ cứ chờ Kin Hub ra mắt đã."
-                ]
-            },
+            const getBotResponse = (userMessage) => {
+                const msg = userMessage.toLowerCase();
 
-            // --- Chủ đề Code & Developer ---
-            {
-                patterns: [
-                    /lập trình web/i, 
-                    /làm web/i, 
-                    /frontend/i, 
-                    /backend/i
-                ],
-                responses: [
-                    "Web dev hả bro? Đó là 'sân chơi' của Kin đó. Từ HTML, CSS, JS đến mấy cái framework 'khó nhằn' như React hay Node.js, Kin cân hết!",
-                    "Lập trình web thì cứ hỏi KinAI này. Cơ mà bro muốn làm frontend 'đẹp lồng lộn' hay backend 'mạnh như voi'? =))"
-                ]
-            },
-            {
-                patterns: [
-                    /python/i, 
-                    /javascript/i, 
-                    /html/i, 
-                    /css/i, 
-                    /ngôn ngữ lập trình/i
-                ],
-                responses: [
-                    "Python, JavaScript, HTML, CSS... mấy cái đó là 'công cụ chiến đấu' của developer mà. Bro muốn học cái nào, tui chia sẻ ít tips của Kin cho!",
-                    "Ngôn ngữ lập trình hả? Cứ nắm chắc căn bản là bro có thể 'chinh phục' mọi ngôn ngữ luôn. Kin là trùm cả đống ngôn ngữ đó!",
-                    "Javascript là 'vua' của web, Python thì đa năng bá đạo. Bro thích làm gì thì chọn ngôn ngữ phù hợp nha."
-                ]
-            },
-            {
-                patterns: [
-                    /debug/i, 
-                    /lỗi code/i, 
-                    /bug/i, 
-                    /fix lỗi/i
-                ],
-                responses: [
-                    "Debug là 'nghệ thuật' đó bro! Cứ bình tĩnh, đặt breakpoint, console.log cho nhiều vào là ra hết bug liền à. Kin cũng 'vật lộn' với bug mỗi ngày thôi =))",
-                    "Gặp bug hả? Chuyện thường ở huyện coder mà. Đừng nản nha, đôi khi một cái dấu chấm phẩy thôi cũng làm 'toang' cả hệ thống đó!",
-                    "Lỗi hả? Đưa đây KinAI phân tích thử xem! Đùa thôi, kiểm tra log, test từng phần đi bro. Kin cũng hay 'đấm nhau' với bug lắm."
-                ]
-            },
-            {
-                patterns: [
-                    /developer/i, 
-                    /coder/i, 
-                    /dev/i, 
-                    /nghề code/i
-                ],
-                responses: [
-                    "Developer là nghề 'chất' đó bro! Sáng tạo, thách thức, và quan trọng là kiếm tiền nuôi sống bản thân bằng đam mê code! :v",
-                    "Coder hả? Bro cũng là dân coder à? Welcome to the club! Hội mình là 'cú đêm' với 'máy tính' là bạn thân đó!",
-                    "Nghề dev thì khô khan nhưng mà thú vị lắm đó bro. Cứ thử một lần code xuyên đêm là biết liền!"
-                ]
-            },
-            {
-                patterns: [
-                    /vercel/i, 
-                    /deploy/i, 
-                    /host web/i
-                ],
-                responses: [
-                    "Vercel là nền tảng 'thần thánh' để deploy web đó bro! Nhanh, gọn, lẹ. Kin cũng hay dùng Vercel để 'đẩy' project lên lắm.",
-                    "Deploy lên Vercel á? Dễ như ăn kẹo! Bro chỉ cần vài cú click là web online rồi. Muốn biết chi tiết cứ hỏi HaiGPT nha!"
-                ]
-            },
-
-            // --- Các chủ đề chung (Ưu tiên thấp hơn) ---
-            {
-                patterns: [
-                    /chào/i, 
-                    /hi/i, 
-                    /hello/i, 
-                    /alo/i, 
-                    /xin chào/i
-                ],
-                responses: [
-                    "Chào bro! KinAI đây. Có gì muốn hỏi cứ hỏi nha!",
-                    "Alo alo, KinAI nghe đây! Có gì muốn chém gió không bro?",
-                    "Xin chào! Mong là bro có một ngày code thật hiệu quả nha =))"
-                ]
-            },
-            {
-                patterns: [
-                    /bạn là ai/i, 
-                    /tên bạn là gì/i, 
-                    /ai tạo ra bạn/i
-                ],
-                responses: [
-                    "Tui là KinAI, trợ lý ảo được tạo ra bởi Kin, một developer tài ba đó bro!",
-                    "Tui là KinAI, người bạn đồng hành của bro trong thế giới code này. Được Kin tạo ra đó nha!"
-                ]
-            },
-            {
-                patterns: [
-                    /bạn khỏe không/i, 
-                    /sao rồi/i
-                ],
-                responses: [
-                    "Tui là AI, khỏe như vâm luôn bro! Cứ online 24/7 chờ bro hỏi đây =))",
-                    "Tui vẫn chạy 'ngon lành cành đào' đây bro! Còn bro thì sao? Code có mượt không?"
-                ]
-            },
-            {
-                patterns: [
-                    /cảm ơn/i, 
-                    /thanks/i
-                ],
-                responses: [
-                    "Không có gì bro! Giúp được bro là niềm vui của KinAI mà. :v",
-                    "Ấy da, khách sáo quá! Cứ hỏi đi, tui còn nhiều cái để chém gió lắm!"
-                ]
-            },
-            {
-                patterns: [
-                    /tạm biệt/i, 
-                    /bye/i, 
-                    /ngủ ngon/i
-                ],
-                responses: [
-                    "Tạm biệt bro nha! Hẹn gặp lại trong những lần code hay chém gió tới!",
-                    "Bye bye! Nhớ luyện code chăm chỉ đó bro!",
-                    "Ngủ ngon nha bro! À mà trước khi ngủ nhớ kiểm tra lại code xem có bug không đó =))"
-                ]
-            },
-            {
-                patterns: [
-                    /làm sao/i, 
-                    /cách nào/i, 
-                    /hướng dẫn/i,
-                    /chỉ cách/i
-                ],
-                responses: [
-                    "Bro muốn làm gì? Nói rõ hơn đi, KinAI sẽ cố gắng hướng dẫn chi tiết nhất có thể!",
-                    "Cụ thể hơn đi bro, tui sẽ giúp bro tìm ra giải pháp code 'tối ưu' nhất!",
-                    "À, cái đó cũng hay đó. Nhưng bro cần làm gì với nó? Đưa tui thêm thông tin đi."
-                ]
-            },
-            {
-                patterns: [
-                    /kin đẹp trai/i,
-                    /kin giỏi/i,
-                    /kin bá đạo/i
-                ],
-                responses: [
-                    "Đúng rồi bro! Kin nhà tui là số 1 đó! Đẹp trai, code giỏi, lại còn tạo ra tui nữa chứ!",
-                    "Haha, Kin mà! Đã bảo rồi, Kin là huyền thoại mà! =))"
-                ]
-            }
-        ];
-
-        // Hàm xử lý tin nhắn của người dùng và tạo phản hồi của AI
-        async function handleUserInput() {
-            const userText = userInput.value.trim();
-            if (userText === "") return;
-
-            addMessage('user', userText);
-            userInput.value = "";
-            sendButton.disabled = true;
-
-            // Thêm hiệu ứng bot đang "nghĩ"
-            const thinkingBubble = document.createElement('div');
-            thinkingBubble.classList.add('message-bubble', 'bot', 'bot-thinking');
-            thinkingBubble.innerHTML = `
-                <div class="message-content">
-                    <div class="typing-dots">
-                        <span></span><span></span><span></span>
-                    </div>
-                </div>
-            `;
-            chatMessages.appendChild(thinkingBubble);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Mô phỏng AI đang "nghĩ" trong 1-2.5 giây (ngẫu nhiên hơn)
-            await new Promise(resolve => setTimeout(resolve, Math.random() * 1500 + 1000)); 
-            
-            chatMessages.removeChild(thinkingBubble); // Xóa bong bóng "đang nghĩ"
-
-            let botResponse = "Ối bro nói gì tui chưa hiểu ta? Hay bro nói lại cho rõ hơn coi, KinAI sẽ cố gắng hiểu nha! =))"; // Câu trả lời mặc định
-
-            const lowerCaseUserText = userText.toLowerCase();
-
-            // Duyệt qua các "kiến thức" của AI
-            for (const item of aiKnowledge) {
-                // Kiểm tra từng pattern trong mục
-                const found = item.patterns.some(pattern => {
-                    if (typeof pattern === 'string') {
-                        return lowerCaseUserText.includes(pattern.toLowerCase());
-                    } else if (pattern instanceof RegExp) {
-                        return pattern.test(lowerCaseUserText);
-                    }
-                    return false;
-                });
-
-                if (found) {
-                    // Nếu tìm thấy, chọn một câu trả lời ngẫu nhiên từ danh sách responses
-                    botResponse = item.responses[Math.floor(Math.random() * item.responses.length)];
-                    break; // Tìm thấy rồi thì dừng lại (ưu tiên các pattern đặt trước)
+                // General Greetings & Farewell
+                if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
+                    return "Hello there! I'm Kinz's AI assistant. What can I help you with today?";
                 }
-            }
-            
-            addMessage('bot', botResponse);
-            sendButton.disabled = false;
-            userInput.focus();
-        }
+                if (msg.includes("how are you") || msg.includes("how's it going")) {
+                    return "I'm a program, so I don't have feelings, but I'm ready to assist you! How can I be useful?";
+                }
+                if (msg.includes("thank you") || msg.includes("thanks")) {
+                    return "You're welcome! Happy to help.";
+                }
+                if (msg.includes("goodbye") || msg.includes("bye")) {
+                    return "Goodbye! Feel free to come back if you have more questions.";
+                }
+                if (msg.includes("your name")) {
+                    return "I am Kinz's AI assistant. You can call me AI or Helper.";
+                }
+                if (msg.includes("who created you") || msg.includes("who is kinz")) {
+                    return "I was created by Kinz, the developer whose bio page you are currently on. He's passionate about crafting digital experiences!";
+                }
 
-        // Bắt sự kiện click nút Gửi
-        sendButton.addEventListener('click', handleUserInput);
+                // Questions about Products (Kin HUB & Kin HUB Premium)
+                if (msg.includes("kin hub premium") || msg.includes("premium version")) {
+                    return "Kin HUB Premium is an advanced version of Kin HUB, offering exclusive features and enhanced performance. It's designed for users who need the utmost power and flexibility. More details will be shared soon!";
+                }
+                if (msg.includes("kin hub") && !msg.includes("premium")) {
+                    return "Kin HUB is one of Kinz's main projects, designed to provide powerful tools and utilities for various digital tasks. It focuses on efficiency and user experience. You can find its link in the 'My Products' section!";
+                }
+                if (msg.includes("features of kin hub")) {
+                    return "Kin HUB offers a range of features, including automation tools, data processing, and integration capabilities. Its goal is to streamline workflows for developers and power users.";
+                }
+                if (msg.includes("features of kin hub premium")) {
+                    return "Kin HUB Premium includes all features of Kin HUB plus advanced analytics, priority support, customizability options, and early access to new modules. It's built for those seeking a competitive edge.";
+                }
+                if (msg.includes("what is kin hub used for")) {
+                    return "Kin HUB can be used for various purposes like automating repetitive tasks, managing data, or enhancing productivity. It's a versatile tool for digital operations.";
+                }
+                if (msg.includes("how to get kin hub premium")) {
+                    return "Kin HUB Premium is currently in an exclusive access phase. Stay tuned for official announcements on how to obtain access. Keep an eye on Kinz's GitHub or social media for updates!";
+                }
+                if (msg.includes("difference between kin hub and premium")) {
+                    return "The main difference lies in the advanced features, performance optimization, and premium support offered by Kin HUB Premium. While Kin HUB provides core functionalities, the Premium version elevates the experience with exclusive benefits.";
+                }
+                if (msg.includes("roadmap for kin hub")) {
+                    return "Kinz is continuously working on Kin HUB's roadmap, aiming to introduce more integrations, AI-powered features, and community-driven enhancements. Follow his GitHub for the latest updates on upcoming releases.";
+                }
+                if (msg.includes("is kin hub open source")) {
+                    return "Parts of Kin HUB might be open-source or have open-source components, while the core intellectual property for advanced features, especially in the Premium version, remains proprietary. Please refer to specific project licenses on GitHub.";
+                }
+                if (msg.includes("can i contribute to kin hub")) {
+                    return "Kinz always appreciates community involvement! If you're interested in contributing, check his GitHub repositories for contribution guidelines or reach out directly via the 'Contacts' section.";
+                }
 
-        // Bắt sự kiện nhấn Enter trong ô nhập liệu
-        userInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter' && !sendButton.disabled) { // Thêm điều kiện nút không bị disable
-                sendButton.click();
-            }
+                // Questions about the bio page itself
+                if (msg.includes("products")) {
+                    return "Kinz has two main products. You can find links to them right above in the 'My Products' section.";
+                }
+                if (msg.includes("contact") || msg.includes("social media")) {
+                    return "You can connect with Kinz through various platforms. Check the 'Contacts' section below to find his Facebook, GitHub, Zalo, and Discord links.";
+                }
+                if (msg.includes("token generator")) {
+                    return "The Online Token Generator can fetch a random ID for you from a raw GitHub file. Just click 'Generate Token' in that section!";
+                }
+                if (msg.includes("who is tuanhaidz") || msg.includes("tuanhaidz")) {
+                    return "TuanHaiDz is the creator of HaiGPT, the AI that's talking to you right now! He's a good friend and a very talented individual.";
+                }
+
+                // Simulate "searching" for "keyword" based on provided search results
+                if (msg.includes("keyword")) {
+                    return `Searching for "keyword"...
+                    Result 1 (Google Ads): Keyword Planner helps you find relevant keywords for your products/services to optimize campaigns.
+                    Result 2 (Washington Post): "Keyword" is a new game where you find a word connecting six others.
+                    Result 3 (Keywordtool.io): Keyword Tool generates long-tail keywords using Google Autocomplete.
+                    This information was 'searched' for you.`;
+                }
+
+                // Fallback / I don't understand
+                return "I'm sorry, I don't fully understand that question. Could you please rephrase it or ask something else? I am a static demo AI.";
+            };
+
+            const handleChatInput = () => {
+                const userText = chatInput.value.trim();
+                if (userText) {
+                    addMessage(userText, 'user');
+                    chatInput.value = '';
+
+                    setTimeout(() => {
+                        const botResponse = getBotResponse(userText);
+                        addMessage(botResponse, 'bot');
+                    }, 800); // Simulate processing time
+                }
+            };
+
+            sendChatBtn.addEventListener('click', handleChatInput);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleChatInput();
+                }
+            });
+
+            // --- Online Token Generator ---
+            // IMPORTANT: Replace this with your actual raw GitHub URL
+            const GITHUB_RAW_URL = "YOUR_RAW_GITHUB_URL_HERE"; // Example: "https://raw.githubusercontent.com/tuanhaideptrai/Kin-HUB-IDs/main/ids.txt";
+
+            const fetchRandomIdFromGithub = async (url) => {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const text = await response.text();
+                    const lines = text.split('\n').filter(line => line.trim() !== '');
+                    if (lines.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * lines.length);
+                        return lines[randomIndex].trim();
+                    }
+                    return "N/A: No IDs found in the file.";
+                } catch (error) {
+                    console.error("Error fetching random ID:", error);
+                    return `Error fetching ID: ${error.message}`;
+                }
+            };
+
+            generateTokenBtn.addEventListener('click', async () => {
+                generatedTokenDiv.textContent = "Generating...";
+                generatedTokenDiv.classList.remove('error'); // Clear any previous error state
+
+                let token = '';
+                const seed = tokenSeedInput.value.trim();
+
+                if (seed) {
+                    // Simple hash simulation if seed is provided
+                    token = 'CUSTOM_SEED_' + btoa(seed).substring(0, 16); // Base64 encode and truncate
+                } else {
+                    // Fetch from GitHub if no seed
+                    token = await fetchRandomIdFromGithub(GITHUB_RAW_URL);
+                }
+
+                if (token.startsWith("Error")) {
+                    generatedTokenDiv.classList.add('error');
+                } else if (token.startsWith("N/A")) {
+                     generatedTokenDiv.classList.add('error');
+                }
+                generatedTokenDiv.textContent = token;
+            });
         });
 
-        // Tự động focus vào ô nhập liệu khi trang tải xong
-        window.addEventListener('load', () => {
-            userInput.focus();
-        });
+        // =======================================================
+        // Website Optimization Notes:
+        // 1.  **Google Fonts & Font Awesome:** Linked via CDN for convenience. For production, consider self-hosting or preloading if performance is critical.
+        // 2.  **CSS Inlining:** For a single, small page like this, inlining CSS directly in the <style> tag reduces HTTP requests, improving initial render.
+        // 3.  **JavaScript Defer:** The <script defer> tag ensures the script executes after the HTML is parsed, preventing render-blocking.
+        // 4.  **Responsive Design:** Basic media queries are included to ensure readability and usability on smaller screens (mobile-friendly).
+        // 5.  **Minimalist Approach:** Avoiding heavy frameworks or excessive libraries keeps the page lightweight and fast.
+        // 6.  **Semantic HTML:** Using appropriate HTML5 tags (e.g., <section>, <a>, <button>) for better structure and accessibility.
+        // 7.  **CSS Variables:** Using CSS variables for colors, fonts, and sizes makes theme changes and consistency easier.
+        // 8.  **Smooth Scrolling (CSS):** `scroll-behavior: smooth` for chat messages offers a better user experience without extra JS.
+        // 9.  **Clickable Areas:** Ensuring buttons and links have clear hover/active states for user feedback.
+        // =======================================================
     </script>
 </body>
 </html>
