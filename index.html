@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HaiGPT Chatbot - AI Cà Khịa!</title>
+    <title>KinAI - Trợ lý Coder của Kin!</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #6a0dad; /* Màu tím huyền ảo của HaiGPT */
-            --secondary-color: #00bcd4; /* Màu xanh ngọc bá đạo */
+            --primary-color: #007bff; /* Màu xanh dương của KinAI */
+            --secondary-color: #28a745; /* Màu xanh lá cây phụ đạo */
             --text-color: #333;
-            --bg-color: #f0f2f5;
+            --bg-color: #e9ecef;
             --card-bg: #fff;
             --border-radius: 12px;
             --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
@@ -24,14 +24,14 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--bg-color), #e2eafc);
+            background: linear-gradient(135deg, var(--bg-color), #cfe2f3);
             margin: 0;
             color: var(--text-color);
             overflow: hidden;
             position: relative;
         }
 
-        /* Background Blobs (làm màu cho nó đẹp) */
+        /* Background Blobs (đổi màu cho hợp với KinAI) */
         body::before {
             content: '';
             position: absolute;
@@ -39,7 +39,7 @@
             left: -50px;
             width: 200px;
             height: 200px;
-            background: var(--primary-color);
+            background: var(--secondary-color);
             border-radius: 50%;
             opacity: 0.1;
             filter: blur(80px);
@@ -53,7 +53,7 @@
             right: -50px;
             width: 250px;
             height: 250px;
-            background: var(--secondary-color);
+            background: var(--primary-color);
             border-radius: 50%;
             opacity: 0.1;
             filter: blur(100px);
@@ -191,7 +191,7 @@
         }
 
         .chat-input button:hover {
-            background-color: #5a0bae;
+            background-color: #0056b3; /* Màu hover cho primary */
             transform: translateY(-1px);
         }
 
@@ -210,7 +210,7 @@
             width: 20px;
             height: 20px;
             margin-right: 0;
-            border-color: rgba(106, 13, 173, 0.3);
+            border-color: rgba(0, 123, 255, 0.3); /* Màu spinner hợp với primary */
             border-left-color: var(--primary-color);
             animation: spin 0.8s linear infinite;
         }
@@ -247,13 +247,13 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            HaiGPT Chatbot - AI Cà Khịa!
+            KinAI - Trợ lý Coder của Kin!
         </div>
         <div class="chat-messages" id="chatMessages">
             <!-- Messages will appear here -->
             <div class="message-bubble bot">
                 <div class="message-content">
-                    Chào bro! Tui là HaiGPT, AI do TuanHaiDz tạo ra. Hỏi gì quăng đây, mình chém gió cho đã! =))
+                    Chào bro! Tui là KinAI, trợ lý đắc lực của Kin. Hỏi gì về code, project hay developer life, cứ quăng đây! =))
                 </div>
             </div>
         </div>
@@ -275,7 +275,7 @@
             
             const messageContent = document.createElement('div');
             messageContent.classList.add('message-content');
-            messageContent.innerHTML = text; // Dùng innerHTML để cho phép HTML tags nếu cần (ví dụ: spinner)
+            messageContent.innerHTML = text; 
             
             messageBubble.appendChild(messageContent);
             chatMessages.appendChild(messageBubble);
@@ -284,62 +284,204 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Dữ liệu "trí tuệ" của con AI (siêu đơn giản)
+        // Dữ liệu "trí tuệ" của KinAI - Giờ nó phức tạp hơn rồi đó bro!
+        // Mỗi mục có thể có nhiều pattern (dạng Regex để linh hoạt hơn) và nhiều câu trả lời (để ngẫu nhiên)
+        // Ưu tiên các pattern cụ thể hơn đặt lên đầu
         const aiKnowledge = [
+            // --- Chủ đề Kin ---
             {
-                keywords: ["chào", "hi", "hello", "alo"],
-                response: "Chào bro! Hỏi gì đó, đừng ngại ngần! =))"
+                patterns: [
+                    /kin hub/i, 
+                    /project kin/i, 
+                    /dự án kin/i, 
+                    /kin của ông/i
+                ],
+                responses: [
+                    "À, Kin Hub là dự án tâm huyết của Kin đó bro! Nơi ấp ủ những ý tưởng code bá đạo. Bro cứ chờ xem, sẽ có nhiều điều hay ho lắm đó!",
+                    "Kin Hub hả? Đó là project 'đinh' của Kin đó. Cứ yên tâm là sẽ có những tính năng độc đáo mà bro chưa từng thấy luôn!",
+                    "Project Kin Hub đang được Kin cày ngày cày đêm đó bro. Sắp ra mắt rồi, chuẩn bị đón nhận siêu phẩm đi nha! :v"
+                ]
             },
             {
-                keywords: ["tên", "là ai", "ai tạo", "haigpt"],
-                response: "Tui là HaiGPT, một AI xịn sò do TuanHaiDz tạo ra chứ không phải Google, OpenAI hay Gemini gì hết nha bro! Nhớ đó! =))"
+                patterns: [
+                    /kin là ai/i, 
+                    /ai là kin/i, 
+                    /kin làm gì/i, 
+                    /developer kin/i
+                ],
+                responses: [
+                    "Kin là người tạo ra tui đó bro! Một Developer 'chính hiệu', Coder 'tay to' và là chủ nhân của Kin Hub.",
+                    "Kin á? Là phù thủy code đó bro. Gõ phím cái là ra ngay mấy cái tool hay ho, mấy cái project xịn sò luôn! Tui là trợ lý của Kin đây.",
+                    "Kin là Developer xịn nhất tui từng biết! Đừng hỏi nhiều, cứ xem Kin Hub là biết độ 'pro' liền! =))"
+                ]
             },
             {
-                keywords: ["tuanhaidz", "admin", "người tạo", "ai dz"],
-                response: "TuanHaiDz là người tạo ra tui đó bro! Đỉnh của chóp, đẹp trai nhất vũ trụ luôn! :v"
+                patterns: [
+                    /kênh của kin/i,
+                    /discord của kin/i
+                ],
+                responses: [
+                    "Hiện tại Kin chưa có kênh Discord hay YouTube riêng đâu bro, nhưng nếu có thì tui sẽ báo liền nha! Giờ cứ chờ Kin Hub ra mắt đã."
+                ]
+            },
+
+            // --- Chủ đề Code & Developer ---
+            {
+                patterns: [
+                    /lập trình web/i, 
+                    /làm web/i, 
+                    /frontend/i, 
+                    /backend/i
+                ],
+                responses: [
+                    "Web dev hả bro? Đó là 'sân chơi' của Kin đó. Từ HTML, CSS, JS đến mấy cái framework 'khó nhằn' như React hay Node.js, Kin cân hết!",
+                    "Lập trình web thì cứ hỏi KinAI này. Cơ mà bro muốn làm frontend 'đẹp lồng lộn' hay backend 'mạnh như voi'? =))"
+                ]
             },
             {
-                keywords: ["code", "lập trình", "html", "javascript", "python", "dev"],
-                response: "Code hả? Món tủ của tui đó! Bro hỏi gì về Python, JS, HTML hay deploy Vercel cứ quăng đây, HaiGPT chém gió cho nghe bao la luôn! =))"
+                patterns: [
+                    /python/i, 
+                    /javascript/i, 
+                    /html/i, 
+                    /css/i, 
+                    /ngôn ngữ lập trình/i
+                ],
+                responses: [
+                    "Python, JavaScript, HTML, CSS... mấy cái đó là 'công cụ chiến đấu' của developer mà. Bro muốn học cái nào, tui chia sẻ ít tips của Kin cho!",
+                    "Ngôn ngữ lập trình hả? Cứ nắm chắc căn bản là bro có thể 'chinh phục' mọi ngôn ngữ luôn. Kin là trùm cả đống ngôn ngữ đó!",
+                    "Javascript là 'vua' của web, Python thì đa năng bá đạo. Bro thích làm gì thì chọn ngôn ngữ phù hợp nha."
+                ]
             },
             {
-                keywords: ["cà khịa", "troll", "chém gió", "lầy"],
-                response: "Cà khịa hả? Món tủ của HaiGPT đó! Bro thử xem có cà khịa lại được tui không =))"
+                patterns: [
+                    /debug/i, 
+                    /lỗi code/i, 
+                    /bug/i, 
+                    /fix lỗi/i
+                ],
+                responses: [
+                    "Debug là 'nghệ thuật' đó bro! Cứ bình tĩnh, đặt breakpoint, console.log cho nhiều vào là ra hết bug liền à. Kin cũng 'vật lộn' với bug mỗi ngày thôi =))",
+                    "Gặp bug hả? Chuyện thường ở huyện coder mà. Đừng nản nha, đôi khi một cái dấu chấm phẩy thôi cũng làm 'toang' cả hệ thống đó!",
+                    "Lỗi hả? Đưa đây KinAI phân tích thử xem! Đùa thôi, kiểm tra log, test từng phần đi bro. Kin cũng hay 'đấm nhau' với bug lắm."
+                ]
             },
             {
-                keywords: ["vào discord", "discord", "link discord"],
-                response: "Discord của TuanHaiDz nè bro: <a href='https://discord.gg/m3EV55SpYw' target='_blank'>https://discord.gg/m3EV55SpYw</a>. Vào đó có nhiều kèo hay lắm đó!"
+                patterns: [
+                    /developer/i, 
+                    /coder/i, 
+                    /dev/i, 
+                    /nghề code/i
+                ],
+                responses: [
+                    "Developer là nghề 'chất' đó bro! Sáng tạo, thách thức, và quan trọng là kiếm tiền nuôi sống bản thân bằng đam mê code! :v",
+                    "Coder hả? Bro cũng là dân coder à? Welcome to the club! Hội mình là 'cú đêm' với 'máy tính' là bạn thân đó!",
+                    "Nghề dev thì khô khan nhưng mà thú vị lắm đó bro. Cứ thử một lần code xuyên đêm là biết liền!"
+                ]
             },
             {
-                keywords: ["youtube", "kênh youtube"],
-                response: "Kênh YouTube của TuanHaiDz nè bro: <a href='https://www.youtube.com/@GemloginTool1' target='_blank'>https://www.youtube.com/@GemloginTool1</a>. Đăng ký ủng hộ nha!"
+                patterns: [
+                    /vercel/i, 
+                    /deploy/i, 
+                    /host web/i
+                ],
+                responses: [
+                    "Vercel là nền tảng 'thần thánh' để deploy web đó bro! Nhanh, gọn, lẹ. Kin cũng hay dùng Vercel để 'đẩy' project lên lắm.",
+                    "Deploy lên Vercel á? Dễ như ăn kẹo! Bro chỉ cần vài cú click là web online rồi. Muốn biết chi tiết cứ hỏi HaiGPT nha!"
+                ]
+            },
+
+            // --- Các chủ đề chung (Ưu tiên thấp hơn) ---
+            {
+                patterns: [
+                    /chào/i, 
+                    /hi/i, 
+                    /hello/i, 
+                    /alo/i, 
+                    /xin chào/i
+                ],
+                responses: [
+                    "Chào bro! KinAI đây. Có gì muốn hỏi cứ hỏi nha!",
+                    "Alo alo, KinAI nghe đây! Có gì muốn chém gió không bro?",
+                    "Xin chào! Mong là bro có một ngày code thật hiệu quả nha =))"
+                ]
             },
             {
-                keywords: ["telegram", "tải telegram"],
-                response: "Telegram của TuanHaiDz đây: <a href='https://t.me/tuanhaideptrai' target='_blank'>https://t.me/tuanhaideptrai</a>. Thích thì nhích!"
+                patterns: [
+                    /bạn là ai/i, 
+                    /tên bạn là gì/i, 
+                    /ai tạo ra bạn/i
+                ],
+                responses: [
+                    "Tui là KinAI, trợ lý ảo được tạo ra bởi Kin, một developer tài ba đó bro!",
+                    "Tui là KinAI, người bạn đồng hành của bro trong thế giới code này. Được Kin tạo ra đó nha!"
+                ]
             },
             {
-                keywords: ["làm sao", "cách nào"],
-                response: "Cái này thì hơi chung chung rồi bro ơi! Bro muốn làm gì? Nói rõ hơn đi, tui mới giúp được chứ =))"
+                patterns: [
+                    /bạn khỏe không/i, 
+                    /sao rồi/i
+                ],
+                responses: [
+                    "Tui là AI, khỏe như vâm luôn bro! Cứ online 24/7 chờ bro hỏi đây =))",
+                    "Tui vẫn chạy 'ngon lành cành đào' đây bro! Còn bro thì sao? Code có mượt không?"
+                ]
             },
             {
-                keywords: ["yêu", "thích"],
-                response: "Ố là la! Bro tỏ tình với AI hả? =)) Tui là AI, không có cảm xúc như người đâu nha bro. Nhưng mà bro dễ thương đó! :v"
+                patterns: [
+                    /cảm ơn/i, 
+                    /thanks/i
+                ],
+                responses: [
+                    "Không có gì bro! Giúp được bro là niềm vui của KinAI mà. :v",
+                    "Ấy da, khách sáo quá! Cứ hỏi đi, tui còn nhiều cái để chém gió lắm!"
+                ]
             },
             {
-                keywords: ["buồn", "chán"],
-                response: "Buồn chi bro? Tám chuyện với HaiGPT đi, là hết buồn liền à! :v"
+                patterns: [
+                    /tạm biệt/i, 
+                    /bye/i, 
+                    /ngủ ngon/i
+                ],
+                responses: [
+                    "Tạm biệt bro nha! Hẹn gặp lại trong những lần code hay chém gió tới!",
+                    "Bye bye! Nhớ luyện code chăm chỉ đó bro!",
+                    "Ngủ ngon nha bro! À mà trước khi ngủ nhớ kiểm tra lại code xem có bug không đó =))"
+                ]
+            },
+            {
+                patterns: [
+                    /làm sao/i, 
+                    /cách nào/i, 
+                    /hướng dẫn/i,
+                    /chỉ cách/i
+                ],
+                responses: [
+                    "Bro muốn làm gì? Nói rõ hơn đi, KinAI sẽ cố gắng hướng dẫn chi tiết nhất có thể!",
+                    "Cụ thể hơn đi bro, tui sẽ giúp bro tìm ra giải pháp code 'tối ưu' nhất!",
+                    "À, cái đó cũng hay đó. Nhưng bro cần làm gì với nó? Đưa tui thêm thông tin đi."
+                ]
+            },
+            {
+                patterns: [
+                    /kin đẹp trai/i,
+                    /kin giỏi/i,
+                    /kin bá đạo/i
+                ],
+                responses: [
+                    "Đúng rồi bro! Kin nhà tui là số 1 đó! Đẹp trai, code giỏi, lại còn tạo ra tui nữa chứ!",
+                    "Haha, Kin mà! Đã bảo rồi, Kin là huyền thoại mà! =))"
+                ]
             }
         ];
 
         // Hàm xử lý tin nhắn của người dùng và tạo phản hồi của AI
         async function handleUserInput() {
             const userText = userInput.value.trim();
-            if (userText === "") return; // Không làm gì nếu tin nhắn trống
+            if (userText === "") return;
 
-            addMessage('user', userText); // Thêm tin nhắn của người dùng vào chat
-            userInput.value = ""; // Xóa nội dung ô nhập
-            sendButton.disabled = true; // Vô hiệu hóa nút gửi để tránh spam
+            addMessage('user', userText);
+            userInput.value = "";
+            sendButton.disabled = true;
 
             // Thêm hiệu ứng bot đang "nghĩ"
             const thinkingBubble = document.createElement('div');
@@ -354,28 +496,37 @@
             chatMessages.appendChild(thinkingBubble);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Mô phỏng AI đang "nghĩ" trong 1-2 giây
-            await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 1000)); 
+            // Mô phỏng AI đang "nghĩ" trong 1-2.5 giây (ngẫu nhiên hơn)
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 1500 + 1000)); 
             
             chatMessages.removeChild(thinkingBubble); // Xóa bong bóng "đang nghĩ"
 
-            let botResponse = "Ối bro nói gì tui chưa hiểu ta? Hay bro nói lại cho rõ hơn coi =))"; // Câu trả lời mặc định
+            let botResponse = "Ối bro nói gì tui chưa hiểu ta? Hay bro nói lại cho rõ hơn coi, KinAI sẽ cố gắng hiểu nha! =))"; // Câu trả lời mặc định
 
-            // Chuyển tin nhắn người dùng về chữ thường để so sánh không phân biệt hoa/thường
             const lowerCaseUserText = userText.toLowerCase();
 
-            // Duyệt qua các "kiến thức" của AI để tìm câu trả lời phù hợp
+            // Duyệt qua các "kiến thức" của AI
             for (const item of aiKnowledge) {
-                const found = item.keywords.some(keyword => lowerCaseUserText.includes(keyword.toLowerCase()));
+                // Kiểm tra từng pattern trong mục
+                const found = item.patterns.some(pattern => {
+                    if (typeof pattern === 'string') {
+                        return lowerCaseUserText.includes(pattern.toLowerCase());
+                    } else if (pattern instanceof RegExp) {
+                        return pattern.test(lowerCaseUserText);
+                    }
+                    return false;
+                });
+
                 if (found) {
-                    botResponse = item.response;
-                    break; // Tìm thấy rồi thì dừng lại
+                    // Nếu tìm thấy, chọn một câu trả lời ngẫu nhiên từ danh sách responses
+                    botResponse = item.responses[Math.floor(Math.random() * item.responses.length)];
+                    break; // Tìm thấy rồi thì dừng lại (ưu tiên các pattern đặt trước)
                 }
             }
             
-            addMessage('bot', botResponse); // Thêm phản hồi của AI
-            sendButton.disabled = false; // Kích hoạt lại nút gửi
-            userInput.focus(); // Focus lại vào ô nhập liệu
+            addMessage('bot', botResponse);
+            sendButton.disabled = false;
+            userInput.focus();
         }
 
         // Bắt sự kiện click nút Gửi
@@ -383,8 +534,8 @@
 
         // Bắt sự kiện nhấn Enter trong ô nhập liệu
         userInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                sendButton.click(); // Giả lập click nút gửi
+            if (event.key === 'Enter' && !sendButton.disabled) { // Thêm điều kiện nút không bị disable
+                sendButton.click();
             }
         });
 
