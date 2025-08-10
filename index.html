@@ -353,7 +353,7 @@
             const currentStepHeight = currentStepElement ? currentStepElement.offsetHeight : 0;
             const newStepHeight = stepElement.offsetHeight;
             container.style.height = `${Math.max(currentStepHeight, newStepHeight)}px`;
-            container.style.transition = `height ${var_transition_speed} ease-in-out`;
+            container.style.transition = 'height var(--transition-speed) ease-in-out';
 
 
             if (currentStepElement) {
