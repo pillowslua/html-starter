@@ -353,10 +353,6 @@
         .contact-button.discord:hover { background: #8e9ddf; transform: translateY(-3px); }
 
 
-        /* --- Floating Button (if any) ---
-           Removed #kinhub-premium-button from here
-        */
-
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
             .container {
@@ -380,7 +376,6 @@
                 max-width: 100%;
                 width: 100%;
             }
-            /* Removed #kinhub-premium-button responsive styles */
             .chat-box {
                 height: 300px; /* Adjust chat height for smaller screens */
             }
@@ -417,9 +412,9 @@
                 <div class="messages" id="chatMessages">
                     <div class="message bot-message">Hello! I'm Kinz's AI. How can I assist you today?</div>
                     <div class="message bot-message chat-disclaimer">
-                        **IMPORTANT SECURITY NOTE:** This is a static demo. Connecting to a real AI API like OpenAI requires a **backend server** to protect your API key.
+                        **IMPORTANT SECURITY NOTE:** This is a static demo. Connecting to a real AI API like Google Gemini or OpenAI requires a **backend server** to protect your API key.
                         Putting your API key directly in client-side code (like this HTML file) is **highly insecure** and can lead to financial loss if exposed.
-                        This chat will only respond with pre-defined messages or simulated searches.
+                        This chat will only respond with pre-defined messages or simulated searches, as it cannot connect to external AI services directly.
                     </div>
                 </div>
                 <div class="input-area">
@@ -461,7 +456,7 @@
         </section>
     </div>
 
-    <!-- Removed #kinhub-premium-button -->
+    <!-- Removed floating "Kin HUB PREMIUM" button -->
 
     <script defer>
         document.addEventListener('DOMContentLoaded', () => {
@@ -477,7 +472,7 @@
             const GITHUB_RAW_URL = "https://raw.githubusercontent.com/tuanhaideptrai/Kin-HUB-IDs/main/ids.txt"; // REMEMBER TO CHANGE THIS TO YOUR ACTUAL RAW GITHUB FILE LINK!
             if (githubRawLink) githubRawLink.href = GITHUB_RAW_URL; // Update link in HTML
 
-            // --- AI Chat Simulation (Enhanced & Ready for API Integration) ---
+            // --- SIMULATED AI RESPONSE LOGIC (NO REAL API CALLS) ---
             const addMessage = (text, sender, isTyping = false) => {
                 const msgDiv = document.createElement('div');
                 msgDiv.classList.add('message', `${sender}-message`);
@@ -490,39 +485,6 @@
                 chatMessages.appendChild(msgDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight; // Auto scroll to bottom
                 return msgDiv; // Return element to modify later if it's a typing indicator
-            };
-
-            // This is a placeholder for your backend API endpoint
-            // Example if you use Node.js Express: "http://localhost:3000/api/chat"
-            // You MUST build a backend server to handle this securely.
-            const YOUR_BACKEND_API_URL = "YOUR_BACKEND_API_URL_HERE"; // <--- REPLACE THIS WITH YOUR ACTUAL BACKEND API URL
-
-            const callOpenAIAPI = async (message) => {
-                // IMPORTANT: This part assumes you have a backend server at YOUR_BACKEND_API_URL
-                // that handles the actual call to OpenAI API using your secret API key.
-                // DO NOT put your OpenAI API Key directly in this client-side code.
-
-                try {
-                    const response = await fetch(YOUR_BACKEND_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            // No API Key here! Your backend handles authentication.
-                        },
-                        body: JSON.stringify({ prompt: message }),
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(`Backend Error: ${errorData.message || response.statusText}`);
-                    }
-
-                    const data = await response.json();
-                    return data.response; // Assuming your backend sends { response: "AI's reply" }
-                } catch (error) {
-                    console.error("Error calling backend API:", error);
-                    return `Error: Could not connect to the AI (API issue). Please ensure the backend server is running and configured correctly. Details: ${error.message}`;
-                }
             };
 
             const getSimulatedBotResponse = (userMessage) => {
@@ -552,8 +514,11 @@
                 if (msg.includes("kin hub premium") || msg.includes("premium version")) {
                     return "Kin HUB Premium is an advanced version of Kin HUB, offering exclusive features and enhanced performance. It's designed for users who need the utmost power and flexibility. More details will be shared soon!";
                 }
-                if (msg.includes("kin hub") && !msg.includes("premium")) {
-                    return "Kin HUB is one of Kinz's main projects, designed to provide powerful tools and utilities for various digital tasks. It focuses on efficiency and user experience. You can find its link in the 'My Products' section!";
+                if ((msg.includes("kin hub") && !msg.includes("premium")) || msg.includes("product one")) {
+                    return "Kin HUB (Product One) is one of Kinz's main projects, designed to provide powerful tools and utilities for various digital tasks. It focuses on efficiency and user experience. You can find its link in the 'My Products' section!";
+                }
+                 if (msg.includes("product two")) {
+                    return "Product Two is another innovative project by Kinz, focused on [briefly describe ProductTwo's purpose, e.g., 'enhancing web automation']. Check it out in the 'My Products' section!";
                 }
                 if (msg.includes("features of kin hub")) {
                     return "Kin HUB offers a range of features, including automation tools, data processing, and integration capabilities. Its goal is to streamline workflows for developers and power users.";
@@ -617,16 +582,10 @@
 
                     // Simulate waiting for API or process simulated response
                     setTimeout(async () => {
-                        let botResponse;
-                        // --- INTEGRATION POINT ---
-                        // If you have a backend, UNCOMMENT the line below and comment out getSimulatedBotResponse
-                        // botResponse = await callOpenAIAPI(userText);
-                        // Otherwise, use the simulated response
-                        botResponse = getSimulatedBotResponse(userText); // Simulated response
-
+                        const botResponse = getSimulatedBotResponse(userText); 
                         typingMessage.textContent = botResponse; // Update the typing message with actual response
                         typingMessage.classList.remove('typing-indicator'); // Remove typing class
-                    }, 800); // Simulate network/processing delay
+                    }, 800); // Simulate processing delay
                 }
             };
 
@@ -689,7 +648,7 @@
         // 6.  **Semantic HTML:** Using appropriate HTML5 tags for better structure and accessibility.
         // 7.  **CSS Variables:** Using CSS variables for colors, fonts, and sizes makes theme changes and consistency easier.
         // 8.  **Smooth Scrolling (CSS):** `scroll-behavior: smooth` for chat messages offers a better user experience.
-        // 9.  **Security for API Keys:** As explained in the chat, *never* expose sensitive API keys in client-side code. Always use a backend proxy.
+        // 9.  **SECURITY FOR API KEYS:** As repeatedly explained in the chat, **NEVER expose sensitive API keys in client-side code.** A backend proxy is mandatory for real AI integration. This demo explicitly avoids real API calls for security reasons.
         // 10. **Script Obfuscation:** Does *not* protect API keys or sensitive data. It only makes code harder to read but is reversible.
         // =======================================================
     </script>
