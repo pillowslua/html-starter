@@ -488,7 +488,7 @@
                 const rawText = await response.text();
                 validKeys = rawText.split('\n').map(key => key.trim()).filter(key => key.length > 0);
                 if (validKeys.length > 0) {
-                    finalKeyToDisplay = validKeys[0]; // Lấy key đầu tiên trong danh sách để hiển thị
+                    finalKeyToDisplay = validKeys[Math.floor(Math.random() * validKeys.length)]; // Lấy key đầu tiên trong danh sách để hiển thị
                 } else {
                     throw new Error("Không có key nào trong file! Check lại file đi bro.");
                 }
