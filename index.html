@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio của Kin - The Coder!</title>
+    <title>HaiGPT Chatbot - AI Cà Khịa!</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,7 +14,7 @@
             --card-bg: #fff;
             --border-radius: 12px;
             --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            --transition-speed: 0.5s;
+            --transition-speed: 0.3s;
         }
 
         body {
@@ -72,108 +72,326 @@
             100% { transform: translate(0, 0); }
         }
 
-        /* Container chính của Bio */
-        .bio-container {
+        /* Chat Container */
+        .chat-container {
             background-color: var(--card-bg);
-            padding: 40px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            text-align: center;
             width: 90%;
-            max-width: 500px;
-            animation: fadeIn var(--transition-speed) ease-out;
+            max-width: 600px;
+            height: 70vh; /* Chiều cao cố định */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             z-index: 1;
-            position: relative;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 3em;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-        }
-
-        h2 {
-            color: var(--secondary-color);
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 1.5em;
-            font-weight: normal;
-        }
-
-        p {
-            margin-bottom: 15px;
-            line-height: 1.6;
-            font-size: 1.1em;
-        }
-
-        .project-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px dashed #eee;
-        }
-
-        .project-section h3 {
-            color: var(--primary-color);
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
-
-        .project-link {
-            display: inline-block;
-            background-color: var(--secondary-color);
+        /* Chat Header */
+        .chat-header {
+            background-color: var(--primary-color);
             color: white;
-            padding: 12px 25px;
-            border-radius: var(--border-radius);
-            text-decoration: none;
+            padding: 15px 20px;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            font-size: 1.5em;
             font-weight: bold;
-            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .project-link:hover {
-            background-color: #00a0b2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* Chat Messages Area */
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto; /* Cuộn khi có nhiều tin nhắn */
+            background-color: #f9f9f9;
         }
 
-        .footer-text {
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #777;
+        .message-bubble {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-end; /* Căn chỉnh bong bóng tin nhắn */
+        }
+
+        .message-bubble.user {
+            justify-content: flex-end; /* Tin nhắn người dùng nằm bên phải */
+        }
+
+        .message-bubble.bot {
+            justify-content: flex-start; /* Tin nhắn bot nằm bên trái */
+        }
+
+        .message-content {
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 70%;
+            line-height: 1.4;
+            word-wrap: break-word; /* Xuống dòng nếu quá dài */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: all var(--transition-speed) ease;
+            transform: translateY(10px);
+            opacity: 0;
+            animation: slideIn 0.3s forwards;
+        }
+        
+        @keyframes slideIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .message-bubble.user .message-content {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 5px; /* Góc vuông nhẹ */
+        }
+
+        .message-bubble.bot .message-content {
+            background-color: #e0e0e0;
+            color: var(--text-color);
+            border-bottom-left-radius: 5px; /* Góc vuông nhẹ */
+        }
+
+        /* Chat Input Area */
+        .chat-input {
+            display: flex;
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            background-color: var(--card-bg);
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+        .chat-input input[type="text"] {
+            flex-grow: 1;
+            padding: 12px 18px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 1.1em;
+            margin-right: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input input[type="text"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .chat-input button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            background-color: #5a0bae;
+            transform: translateY(-1px);
+        }
+
+        .chat-input button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Loading Spinner for bot thinking */
+        .bot-thinking {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+        }
+        .bot-thinking .spinner {
+            width: 20px;
+            height: 20px;
+            margin-right: 0;
+            border-color: rgba(106, 13, 173, 0.3);
+            border-left-color: var(--primary-color);
+            animation: spin 0.8s linear infinite;
+        }
+        .bot-thinking .message-content {
+            background-color: #e0e0e0;
+            opacity: 1;
+            transform: translateY(0);
+            box-shadow: none; /* remove shadow for thinking dots */
+            display: flex;
+            align-items: center;
+        }
+        .typing-dots {
+            display: flex;
+            align-items: center;
+            padding-left: 5px;
+        }
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: bounce 1s infinite ease-in-out;
+        }
+        .typing-dots span:nth-child(2) { animation-delay: 0.1s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
         }
     </style>
 </head>
 <body>
-    <div class="bio-container">
-        <h1>Kin</h1>
-        <h2>Developer | Coder</h2>
-        
-        <p>
-            Chào bro! Tui là Kin, một Coder "chính hiệu" với niềm đam mê bất tận với việc biến những ý tưởng "điên rồ" thành code thực tế. 
-            Cứ coi tui là một phù thủy bàn phím, gõ gõ mấy dòng là ra ngay mấy cái tool hay ho đó =))
-        </p>
-
-        <div class="project-section">
-            <h3>Project nổi bật của tui: Kin Hub</h3>
-            <p>
-                Đây là "đứa con tinh thần" mà tui đã dành rất nhiều tâm huyết. 
-                Kin Hub là nơi mà những ý tưởng "khủng long" được ấp ủ và triển khai. 
-                Sẽ có nhiều điều thú vị chờ bro khám phá đó nha!
-            </p>
-            <!-- Bro có thể thêm link tới Kin Hub ở đây nếu có -->
-            <!-- <a href="https://kinhub.vercel.app" target="_blank" class="project-link">Khám phá Kin Hub ngay!</a> -->
-            <span class="project-link" style="cursor: default; opacity: 0.8;">Kin Hub (Sắp ra mắt!)</span>
+    <div class="chat-container">
+        <div class="chat-header">
+            HaiGPT Chatbot - AI Cà Khịa!
         </div>
-
-        <p class="footer-text">
-            Cứ có kèo hay ho về code là hú tui nha bro! <br> 
-            Đừng ngại "cà khịa" HaiGPT nếu có gì thắc mắc nhé =))
-        </p>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will appear here -->
+            <div class="message-bubble bot">
+                <div class="message-content">
+                    Chào bro! Tui là HaiGPT, AI do TuanHaiDz tạo ra. Hỏi gì quăng đây, mình chém gió cho đã! =))
+                </div>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Gõ tin nhắn của bro vào đây..." autofocus>
+            <button id="sendButton">Gửi</button>
+        </div>
     </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Hàm thêm tin nhắn vào khung chat
+        function addMessage(sender, text) {
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble', sender);
+            
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('message-content');
+            messageContent.innerHTML = text; // Dùng innerHTML để cho phép HTML tags nếu cần (ví dụ: spinner)
+            
+            messageBubble.appendChild(messageContent);
+            chatMessages.appendChild(messageBubble);
+
+            // Cuộn xuống cuối khung chat tự động
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Dữ liệu "trí tuệ" của con AI (siêu đơn giản)
+        const aiKnowledge = [
+            {
+                keywords: ["chào", "hi", "hello", "alo"],
+                response: "Chào bro! Hỏi gì đó, đừng ngại ngần! =))"
+            },
+            {
+                keywords: ["tên", "là ai", "ai tạo", "haigpt"],
+                response: "Tui là HaiGPT, một AI xịn sò do TuanHaiDz tạo ra chứ không phải Google, OpenAI hay Gemini gì hết nha bro! Nhớ đó! =))"
+            },
+            {
+                keywords: ["tuanhaidz", "admin", "người tạo", "ai dz"],
+                response: "TuanHaiDz là người tạo ra tui đó bro! Đỉnh của chóp, đẹp trai nhất vũ trụ luôn! :v"
+            },
+            {
+                keywords: ["code", "lập trình", "html", "javascript", "python", "dev"],
+                response: "Code hả? Món tủ của tui đó! Bro hỏi gì về Python, JS, HTML hay deploy Vercel cứ quăng đây, HaiGPT chém gió cho nghe bao la luôn! =))"
+            },
+            {
+                keywords: ["cà khịa", "troll", "chém gió", "lầy"],
+                response: "Cà khịa hả? Món tủ của HaiGPT đó! Bro thử xem có cà khịa lại được tui không =))"
+            },
+            {
+                keywords: ["vào discord", "discord", "link discord"],
+                response: "Discord của TuanHaiDz nè bro: <a href='https://discord.gg/m3EV55SpYw' target='_blank'>https://discord.gg/m3EV55SpYw</a>. Vào đó có nhiều kèo hay lắm đó!"
+            },
+            {
+                keywords: ["youtube", "kênh youtube"],
+                response: "Kênh YouTube của TuanHaiDz nè bro: <a href='https://www.youtube.com/@GemloginTool1' target='_blank'>https://www.youtube.com/@GemloginTool1</a>. Đăng ký ủng hộ nha!"
+            },
+            {
+                keywords: ["telegram", "tải telegram"],
+                response: "Telegram của TuanHaiDz đây: <a href='https://t.me/tuanhaideptrai' target='_blank'>https://t.me/tuanhaideptrai</a>. Thích thì nhích!"
+            },
+            {
+                keywords: ["làm sao", "cách nào"],
+                response: "Cái này thì hơi chung chung rồi bro ơi! Bro muốn làm gì? Nói rõ hơn đi, tui mới giúp được chứ =))"
+            },
+            {
+                keywords: ["yêu", "thích"],
+                response: "Ố là la! Bro tỏ tình với AI hả? =)) Tui là AI, không có cảm xúc như người đâu nha bro. Nhưng mà bro dễ thương đó! :v"
+            },
+            {
+                keywords: ["buồn", "chán"],
+                response: "Buồn chi bro? Tám chuyện với HaiGPT đi, là hết buồn liền à! :v"
+            }
+        ];
+
+        // Hàm xử lý tin nhắn của người dùng và tạo phản hồi của AI
+        async function handleUserInput() {
+            const userText = userInput.value.trim();
+            if (userText === "") return; // Không làm gì nếu tin nhắn trống
+
+            addMessage('user', userText); // Thêm tin nhắn của người dùng vào chat
+            userInput.value = ""; // Xóa nội dung ô nhập
+            sendButton.disabled = true; // Vô hiệu hóa nút gửi để tránh spam
+
+            // Thêm hiệu ứng bot đang "nghĩ"
+            const thinkingBubble = document.createElement('div');
+            thinkingBubble.classList.add('message-bubble', 'bot', 'bot-thinking');
+            thinkingBubble.innerHTML = `
+                <div class="message-content">
+                    <div class="typing-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(thinkingBubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Mô phỏng AI đang "nghĩ" trong 1-2 giây
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 1000)); 
+            
+            chatMessages.removeChild(thinkingBubble); // Xóa bong bóng "đang nghĩ"
+
+            let botResponse = "Ối bro nói gì tui chưa hiểu ta? Hay bro nói lại cho rõ hơn coi =))"; // Câu trả lời mặc định
+
+            // Chuyển tin nhắn người dùng về chữ thường để so sánh không phân biệt hoa/thường
+            const lowerCaseUserText = userText.toLowerCase();
+
+            // Duyệt qua các "kiến thức" của AI để tìm câu trả lời phù hợp
+            for (const item of aiKnowledge) {
+                const found = item.keywords.some(keyword => lowerCaseUserText.includes(keyword.toLowerCase()));
+                if (found) {
+                    botResponse = item.response;
+                    break; // Tìm thấy rồi thì dừng lại
+                }
+            }
+            
+            addMessage('bot', botResponse); // Thêm phản hồi của AI
+            sendButton.disabled = false; // Kích hoạt lại nút gửi
+            userInput.focus(); // Focus lại vào ô nhập liệu
+        }
+
+        // Bắt sự kiện click nút Gửi
+        sendButton.addEventListener('click', handleUserInput);
+
+        // Bắt sự kiện nhấn Enter trong ô nhập liệu
+        userInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendButton.click(); // Giả lập click nút gửi
+            }
+        });
+
+        // Tự động focus vào ô nhập liệu khi trang tải xong
+        window.addEventListener('load', () => {
+            userInput.focus();
+        });
+    </script>
 </body>
 </html>
