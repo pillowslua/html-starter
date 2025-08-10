@@ -87,7 +87,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h1 {
+        h1, h2 {
             color: var(--primary-color);
             margin-bottom: 25px;
             font-size: 2.2em;
@@ -111,7 +111,7 @@
             outline: none;
         }
 
-        button {
+        button, .discord-button {
             background-color: var(--primary-color);
             color: white;
             padding: 14px 25px;
@@ -123,9 +123,12 @@
             transition: all 0.3s ease;
             margin: 5px;
             min-width: 120px;
+            text-decoration: none; /* For anchor tag */
+            display: inline-block; /* For anchor tag */
+            text-align: center;
         }
 
-        button:hover:not(:disabled) {
+        button:hover:not(:disabled), .discord-button:hover {
             background-color: #5a0bae;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -136,7 +139,7 @@
             cursor: not-allowed;
         }
 
-        #message {
+        #globalMessage {
             margin-top: 25px;
             font-weight: bold;
             font-size: 1.1em;
@@ -183,48 +186,153 @@
         <h1>HaiGPT Key System</h1>
         <p class="info">Chào bro, muốn vào thì phải có chìa khóa nha =))</p>
 
+        <!-- Bước 1: Bắt đầu lấy Key -->
         <div id="initialState">
-            <button id="startButton" onclick="startKeyProcess()">Bắt đầu lấy Key</button>
-            <p id="initialMessage" class="info">Nhấn nút để kích hoạt hệ thống key, nhớ đợi 10 giây đó!</p>
+            <button id="startButton">Bắt đầu lấy Key</button>
+            <p id="stepMessage" class="info">Ấn nút để kích hoạt hệ thống key, nhớ làm theo hướng dẫn nha!</p>
         </div>
 
-        <div id="keyInputContainer" style="display: none;">
-            <input type="text" id="keyInput" placeholder="Nhập key của bro vào đây..." disabled>
-            <button id="verifyButton" onclick="checkKey()" disabled>Kiểm Tra Key</button>
+        <!-- Bước 2: Captcha -->
+        <div id="captchaContainer" style="display: none;">
+            <h2>Giải mã Captcha</h2>
+            <p id="captchaQuestion"></p>
+            <input type="text" id="captchaInput" placeholder="Nhập câu trả lời...">
+            <button id="submitCaptchaButton">Xác nhận</button>
+            <p id="captchaMessage" class="info"></p>
         </div>
-        
-        <p id="message"></p>
+
+        <!-- Bước 3: Đợi 10 giây -->
+        <div id="waitingContainer" style="display: none;">
+            <h2><span class="spinner"></span> Đang tải key và đợi chờ...</h2>
+            <p id="waitMessage" class="warning"></p>
+        </div>
+
+        <!-- Bước 4: Tham gia Discord -->
+        <div id="discordContainer" style="display: none;">
+            <h2>Bước cuối cùng!</h2>
+            <p class="info">Tham gia Discord của TuanHaiDz để nhận key ngay!</p>
+            <a href="https://discord.gg/m3EV55SpYw" target="_blank" class="discord-button">
+                Tham gia Discord
+            </a>
+            <button id="getKeyButton" style="margin-top: 20px;">Xác nhận đã tham gia Discord</button>
+            <p id="discordMessage" class="info"></p>
+        </div>
+
+        <!-- Bước 5: Hiển thị Key -->
+        <div id="finalKeyContainer" style="display: none;">
+            <h2>Key của bro đây nè!</h2>
+            <input type="text" id="finalKeyDisplay" readonly>
+            <button id="copyKeyButton">Sao chép Key</button>
+            <p id="finalKeyMessage" class="success"></p>
+        </div>
+
+        <p id="globalMessage"></p> <!-- Dùng để hiển thị thông báo chung -->
     </div>
 
     <script>
         const KEY_SOURCE_URL = "https://raw.githubusercontent.com/pillowslua/kin-hub/refs/heads/main/keys";
-        let validKeys = [];
-        let keyFetched = false;
+        let validKeys = []; // Sẽ chứa các key tải về
+        let finalKeyToDisplay = ""; // Key cuối cùng sẽ hiển thị
+        let captchaAnswer = 0; // Lưu câu trả lời captcha đúng
 
-        const startButton = document.getElementById('startButton');
-        const initialMessage = document.getElementById('initialMessage');
+        // Lấy các element cần dùng
         const initialStateDiv = document.getElementById('initialState');
-        const keyInputContainer = document.getElementById('keyInputContainer');
-        const keyInput = document.getElementById('keyInput');
-        const verifyButton = document.getElementById('verifyButton');
-        const messageElement = document.getElementById('message');
+        const startButton = document.getElementById('startButton');
+        const stepMessage = document.getElementById('stepMessage');
 
-        async function startKeyProcess() {
-            startButton.disabled = true;
-            keyInput.disabled = true;
-            verifyButton.disabled = true;
-            initialMessage.innerHTML = '<span class="spinner"></span> Đang chờ 10 giây để lấy key nè bro... <span id="countdown">10</span> giây';
-            initialMessage.className = 'warning';
+        const captchaContainer = document.getElementById('captchaContainer');
+        const captchaQuestion = document.getElementById('captchaQuestion');
+        const captchaInput = document.getElementById('captchaInput');
+        const submitCaptchaButton = document.getElementById('submitCaptchaButton');
+        const captchaMessage = document.getElementById('captchaMessage');
 
+        const waitingContainer = document.getElementById('waitingContainer');
+        const waitMessage = document.getElementById('waitMessage');
+
+        const discordContainer = document.getElementById('discordContainer');
+        const discordButton = document.querySelector('.discord-button');
+        const getKeyButton = document.getElementById('getKeyButton');
+        const discordMessage = document.getElementById('discordMessage');
+
+        const finalKeyContainer = document.getElementById('finalKeyContainer');
+        const finalKeyDisplay = document.getElementById('finalKeyDisplay');
+        const copyKeyButton = document.getElementById('copyKeyButton');
+        const finalKeyMessage = document.getElementById('finalKeyMessage');
+
+        const globalMessage = document.getElementById('globalMessage');
+
+        // Hàm hiển thị/ẩn các bước
+        function showStep(stepId) {
+            const allSteps = [initialStateDiv, captchaContainer, waitingContainer, discordContainer, finalKeyContainer];
+            allSteps.forEach(step => {
+                if (step.id === stepId) {
+                    step.style.display = 'block';
+                } else {
+                    step.style.display = 'none';
+                }
+            });
+            globalMessage.textContent = ''; // Xóa thông báo chung mỗi khi đổi bước
+        }
+
+        // Bước 1: Bắt đầu lấy Key
+        startButton.addEventListener('click', () => {
+            showStep('captchaContainer');
+            generateCaptcha();
+            captchaInput.focus();
+            captchaMessage.textContent = 'Tính toán cho kỹ nha bro!';
+            captchaMessage.className = 'info';
+        });
+
+        // Hàm tạo Captcha đơn giản
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1; // Số từ 1 đến 10
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            captchaAnswer = num1 + num2;
+            captchaQuestion.textContent = `HaiGPT đố bro: ${num1} + ${num2} = ?`;
+            captchaInput.value = ''; // Xóa input cũ
+        }
+
+        // Bước 2: Xử lý Captcha
+        submitCaptchaButton.addEventListener('click', () => {
+            const userAnswer = parseInt(captchaInput.value.trim());
+            if (isNaN(userAnswer) || userAnswer !== captchaAnswer) {
+                captchaMessage.textContent = 'Sai rồi bro, tính toán lại coi =))';
+                captchaMessage.className = 'error';
+                generateCaptcha(); // Tạo captcha mới
+            } else {
+                captchaMessage.textContent = 'Chính xác! Bro thông minh đó =))';
+                captchaMessage.className = 'success';
+                setTimeout(() => startWaiting(), 1000); // Đợi 1 giây rồi chuyển bước
+            }
+        });
+
+        // Bước 3: Đợi 10 giây và tải Key
+        async function startWaiting() {
+            showStep('waitingContainer');
             let countdown = 10;
+            waitMessage.innerHTML = `<span class="spinner"></span> Đang chờ ${countdown} giây thần thánh để tải key từ vũ trụ GitHub...`;
+            waitMessage.className = 'warning';
+
+            // Bắt đầu tải key ngay lập tức trong khi chờ
+            const fetchPromise = fetchKeys();
+
             const countdownInterval = setInterval(() => {
                 countdown--;
-                document.getElementById('countdown').textContent = countdown;
+                if (countdown >= 0) {
+                    waitMessage.innerHTML = `<span class="spinner"></span> Đang chờ ${countdown} giây thần thánh để tải key từ vũ trụ GitHub...`;
+                }
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
-                    initialMessage.innerHTML = '<span class="spinner"></span> Đang tải keys từ vũ trụ GitHub...';
-                    initialMessage.className = 'info';
-                    fetchKeys();
+                    waitMessage.innerHTML = `<span class="spinner"></span> Đã xong 10 giây! Chuẩn bị chuyển bước...`;
+                    fetchPromise.then(() => {
+                        setTimeout(() => showDiscordButton(), 1000); // Đợi thêm 1 giây cho mượt
+                    }).catch(error => {
+                        globalMessage.textContent = `Ối giời ơi, lỗi khi tải key rồi: ${error.message}. Kêu TuanHaiDz sửa gấp đi!`;
+                        globalMessage.className = 'error';
+                        showStep('initialState'); // Quay về bước đầu
+                        stepMessage.textContent = 'Lỗi tải key! Ấn lại để thử nha bro.';
+                        stepMessage.className = 'error';
+                    });
                 }
             }, 1000);
         }
@@ -236,50 +344,58 @@
                     throw new Error(`Méo tải được keys: ${response.statusText}`);
                 }
                 const rawText = await response.text();
-                // Mỗi dòng là một key, loại bỏ dòng trống
                 validKeys = rawText.split('\n').map(key => key.trim()).filter(key => key.length > 0);
-                keyFetched = true;
-
-                initialStateDiv.style.display = 'none'; // Ẩn phần khởi tạo
-                keyInputContainer.style.display = 'block'; // Hiện phần nhập key
-
-                keyInput.disabled = false;
-                verifyButton.disabled = false;
-                messageElement.textContent = 'Keys đã sẵn sàng! Bro nhập key vào đi!';
-                messageElement.className = 'success';
-                keyInput.focus(); // Tự động focus vào ô nhập key
+                if (validKeys.length > 0) {
+                    finalKeyToDisplay = validKeys[0]; // Lấy key đầu tiên trong danh sách để hiển thị
+                } else {
+                    throw new Error("Không có key nào trong file! Check lại file đi bro.");
+                }
+                console.log("Keys đã tải xong:", validKeys); // Cho bro debug nếu cần
             } catch (error) {
                 console.error('Lỗi thần thánh khi tải keys:', error);
-                messageElement.textContent = `Thôi rồi, lỗi rồi bro ơi: ${error.message}. Kêu TuanHaiDz sửa gấp đi!`;
-                messageElement.className = 'error';
-                startButton.disabled = false; // Cho phép thử lại
-                initialMessage.textContent = 'Ấn lại nút để thử lấy key lần nữa nha!';
-                initialMessage.className = 'error';
+                throw error; // Ném lỗi để promise chain bắt được
             }
         }
 
-        async function checkKey() {
-            if (!keyFetched) {
-                messageElement.textContent = 'Bro chưa lấy keys mà đã đòi kiểm tra? Ấn "Bắt đầu lấy Key" trước đi!';
-                messageElement.className = 'warning';
-                return;
-            }
+        // Bước 4: Hiển thị nút Discord
+        function showDiscordButton() {
+            showStep('discordContainer');
+            discordMessage.textContent = 'Ấn nút "Tham gia Discord" rồi xác nhận để lấy key nha bro!';
+            discordMessage.className = 'info';
+            getKeyButton.disabled = false;
+        }
 
-            const key = keyInput.value.trim();
-            messageElement.textContent = 'Đang kiểm tra key của bro...';
-            messageElement.className = 'info';
-
-            // Mô phỏng kiểm tra key ngay lập tức (vì đã có trong bộ nhớ)
-            if (validKeys.includes(key)) {
-                messageElement.textContent = 'Chính xác! Key đúng rồi bro ơi! Bro là bạn thân của HaiGPT =))';
-                messageElement.className = 'success';
-                // Ở đây bro có thể redirect user đi đâu đó, hoặc hiện nội dung bí mật
-                // Ví dụ: setTimeout(() => window.location.href = 'https://www.youtube.com/@GemloginTool1', 2000);
+        // Bước 5: Hiển thị Key khi xác nhận Discord
+        getKeyButton.addEventListener('click', () => {
+            if (finalKeyToDisplay) {
+                showStep('finalKeyContainer');
+                finalKeyDisplay.value = finalKeyToDisplay;
+                finalKeyMessage.textContent = 'Đây là key của bro! Sao chép lẹ đi rồi quẩy =))';
+                finalKeyMessage.className = 'success';
+                finalKeyDisplay.select(); // Tự động chọn text để dễ copy
+                finalKeyDisplay.setSelectionRange(0, 99999); // Dành cho di động
             } else {
-                messageElement.textContent = 'Key sai lè rồi bro ơi! Coi chừng nhập nhầm nha =))';
-                messageElement.className = 'error';
+                globalMessage.textContent = 'Ối, chưa có key để hiển thị! Có lỗi gì đó rồi bro.';
+                globalMessage.className = 'error';
+                showStep('initialState'); // Quay về bước đầu
             }
-        }
+        });
+
+        // Hàm copy key vào clipboard
+        copyKeyButton.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(finalKeyDisplay.value);
+                finalKeyMessage.textContent = 'Đã sao chép key vào clipboard! Nhanh gọn lẹ =))';
+                finalKeyMessage.className = 'success';
+            } catch (err) {
+                console.error('Lỗi khi sao chép:', err);
+                finalKeyMessage.textContent = 'Sao chép thất bại rồi bro ơi! Bro tự copy tay đi =))';
+                finalKeyMessage.className = 'error';
+            }
+        });
+
+        // Khởi tạo trạng thái ban đầu khi load trang
+        showStep('initialState');
     </script>
 </body>
 </html>
