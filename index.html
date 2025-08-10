@@ -14,6 +14,7 @@
             --card-bg: #fff;
             --border-radius: 12px;
             --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.5s;
         }
 
         body {
@@ -30,6 +31,7 @@
             position: relative;
         }
 
+        /* Background Blobs */
         body::before {
             content: '';
             position: absolute;
@@ -70,6 +72,7 @@
             100% { transform: translate(0, 0); }
         }
 
+        /* Container và các bước (steps) */
         .container {
             background-color: var(--card-bg);
             padding: 40px;
@@ -78,8 +81,38 @@
             text-align: center;
             width: 90%;
             max-width: 450px;
-            animation: fadeIn 1s ease-out;
+            animation: fadeIn var(--transition-speed) ease-out;
             z-index: 1; /* Đảm bảo nổi trên các blob */
+            position: relative; /* Để các bước con dùng absolute */
+            overflow: hidden; /* Che đi phần tràn của animation */
+        }
+
+        .step {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 40px; /* Cùng với padding của container */
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateX(100%); /* Bắt đầu từ phải */
+            transition: opacity var(--transition-speed) ease-in-out, transform var(--transition-speed) ease-in-out;
+            display: flex; /* Dùng flex để căn giữa nội dung */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%; /* Đảm bảo chiều cao đầy đủ */
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: translateX(0); /* Di chuyển vào giữa */
+            position: relative; /* Đặt lại relative khi active */
+        }
+        
+        .step.exit {
+            transform: translateX(-100%); /* Di chuyển sang trái khi exit */
+            opacity: 0;
         }
 
         @keyframes fadeIn {
@@ -139,28 +172,23 @@
             cursor: not-allowed;
         }
 
-        #globalMessage {
+        .message { /* Dùng chung cho các thông báo con */
             margin-top: 25px;
             font-weight: bold;
             font-size: 1.1em;
             min-height: 25px; /* Giữ chỗ cho thông báo */
         }
-
-        .success {
-            color: green;
+        
+        #globalMessage { /* Thông báo chung dưới cùng */
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
         }
 
-        .error {
-            color: red;
-        }
-
-        .info {
-            color: var(--secondary-color);
-        }
-
-        .warning {
-            color: orange;
-        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: var(--secondary-color); }
+        .warning { color: orange; }
 
         /* Loading Spinner */
         .spinner {
@@ -179,51 +207,103 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Popup / Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 30px 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transform: translateY(-50px);
+            transition: transform 0.3s ease-in-out;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>HaiGPT Key System</h1>
-        <p class="info">Chào bro, muốn vào thì phải có chìa khóa nha =))</p>
-
+    <div class="container" id="mainContainer">
         <!-- Bước 1: Bắt đầu lấy Key -->
-        <div id="initialState">
-            <button id="startButton">Bắt đầu lấy Key</button>
-            <p id="stepMessage" class="info">Ấn nút để kích hoạt hệ thống key, nhớ làm theo hướng dẫn nha!</p>
+        <div id="initialState" class="step">
+            <h1>HaiGPT Key System</h1>
+            <p class="info">Chào bro, muốn vào thì phải có chìa khóa nha =))</p>
+            <button id="startButton">Get Key</button>
+            <p id="initialMessage" class="message info">Ấn nút để kích hoạt hệ thống key, nhớ làm theo hướng dẫn nha!</p>
         </div>
 
         <!-- Bước 2: Captcha -->
-        <div id="captchaContainer" style="display: none;">
+        <div id="captchaContainer" class="step">
             <h2>Giải mã Captcha</h2>
             <p id="captchaQuestion"></p>
             <input type="text" id="captchaInput" placeholder="Nhập câu trả lời...">
             <button id="submitCaptchaButton">Xác nhận</button>
-            <p id="captchaMessage" class="info"></p>
+            <p id="captchaMessage" class="message info"></p>
         </div>
 
-        <!-- Bước 3: Đợi 10 giây -->
-        <div id="waitingContainer" style="display: none;">
-            <h2><span class="spinner"></span> Đang tải key và đợi chờ...</h2>
-            <p id="waitMessage" class="warning"></p>
-        </div>
-
-        <!-- Bước 4: Tham gia Discord -->
-        <div id="discordContainer" style="display: none;">
-            <h2>Bước cuối cùng!</h2>
-            <p class="info">Tham gia Discord của TuanHaiDz để nhận key ngay!</p>
+        <!-- Bước 3: Tham gia Discord (Yêu cầu đợi và "quét") -->
+        <div id="discordContainer" class="step">
+            <h2>Bước quan trọng!</h2>
+            <p class="info">Để nhận key, bro cần tham gia Discord của TuanHaiDz.</p>
             <a href="https://discord.gg/m3EV55SpYw" target="_blank" class="discord-button">
-                Tham gia Discord
+                Tham gia Discord ngay!
             </a>
-            <button id="getKeyButton" style="margin-top: 20px;">Xác nhận đã tham gia Discord</button>
-            <p id="discordMessage" class="info"></p>
+            <p class="message info" style="margin-top: 20px;">
+                <span class="spinner" id="discordCheckSpinner" style="display:none;"></span>
+                <span id="discordCheckMessage">Sau khi tham gia, hãy đợi một chút để hệ thống xác nhận...</span>
+            </p>
+            <button id="confirmDiscordButton" disabled style="margin-top: 20px;">Xác nhận đã tham gia Discord</button>
         </div>
 
-        <!-- Bước 5: Hiển thị Key -->
-        <div id="finalKeyContainer" style="display: none;">
+        <!-- Bước 4: Đợi 10 giây tải Key -->
+        <div id="waiting10SecContainer" class="step">
+            <h2><span class="spinner"></span> Đang tải key và đợi chờ...</h2>
+            <p id="wait10SecMessage" class="message warning"></p>
+        </div>
+
+        <!-- Bước 5: Hiển thị Popup Đợi thêm 5 giây -->
+        <div class="modal-overlay" id="popup5SecModal">
+            <div class="modal-content">
+                <h2><span class="spinner"></span> Sắp xong rồi bro!</h2>
+                <p class="info">Đang hoàn tất bước cuối cùng. Đợi thêm <span id="popupCountdown">5</span> giây nữa thôi!</p>
+                <p class="info">HaiGPT đang chuẩn bị chìa khóa cho bro đây =))</p>
+            </div>
+        </div>
+
+        <!-- Bước 6: Hiển thị Key -->
+        <div id="finalKeyContainer" class="step">
             <h2>Key của bro đây nè!</h2>
             <input type="text" id="finalKeyDisplay" readonly>
             <button id="copyKeyButton">Sao chép Key</button>
-            <p id="finalKeyMessage" class="success"></p>
+            <p id="finalKeyMessage" class="message success"></p>
+            <p class="warning" style="font-size: 0.9em; margin-top: 15px;">
+                LƯU Ý: Đây là hệ thống giả lập. Key được hiển thị chỉ mang tính demo.
+            </p>
         </div>
 
         <p id="globalMessage"></p> <!-- Dùng để hiển thị thông báo chung -->
@@ -234,11 +314,13 @@
         let validKeys = []; // Sẽ chứa các key tải về
         let finalKeyToDisplay = ""; // Key cuối cùng sẽ hiển thị
         let captchaAnswer = 0; // Lưu câu trả lời captcha đúng
+        let currentStepElement = null; // Biến để quản lý bước hiện tại
+        const container = document.getElementById('mainContainer'); // Lấy container để set height
 
         // Lấy các element cần dùng
         const initialStateDiv = document.getElementById('initialState');
         const startButton = document.getElementById('startButton');
-        const stepMessage = document.getElementById('stepMessage');
+        const initialMessage = document.getElementById('initialMessage');
 
         const captchaContainer = document.getElementById('captchaContainer');
         const captchaQuestion = document.getElementById('captchaQuestion');
@@ -246,13 +328,17 @@
         const submitCaptchaButton = document.getElementById('submitCaptchaButton');
         const captchaMessage = document.getElementById('captchaMessage');
 
-        const waitingContainer = document.getElementById('waitingContainer');
-        const waitMessage = document.getElementById('waitMessage');
-
         const discordContainer = document.getElementById('discordContainer');
         const discordButton = document.querySelector('.discord-button');
-        const getKeyButton = document.getElementById('getKeyButton');
-        const discordMessage = document.getElementById('discordMessage');
+        const discordCheckSpinner = document.getElementById('discordCheckSpinner');
+        const discordCheckMessage = document.getElementById('discordCheckMessage');
+        const confirmDiscordButton = document.getElementById('confirmDiscordButton');
+
+        const waiting10SecContainer = document.getElementById('waiting10SecContainer');
+        const wait10SecMessage = document.getElementById('wait10SecMessage');
+
+        const popup5SecModal = document.getElementById('popup5SecModal');
+        const popupCountdown = document.getElementById('popupCountdown');
 
         const finalKeyContainer = document.getElementById('finalKeyContainer');
         const finalKeyDisplay = document.getElementById('finalKeyDisplay');
@@ -261,22 +347,48 @@
 
         const globalMessage = document.getElementById('globalMessage');
 
-        // Hàm hiển thị/ẩn các bước
-        function showStep(stepId) {
-            const allSteps = [initialStateDiv, captchaContainer, waitingContainer, discordContainer, finalKeyContainer];
-            allSteps.forEach(step => {
-                if (step.id === stepId) {
-                    step.style.display = 'block';
-                } else {
-                    step.style.display = 'none';
-                }
-            });
+        // Hàm hiển thị/ẩn các bước với animation
+        function showStep(stepElement, direction = 'forward') {
+            // Xác định chiều cao của bước mới để container thay đổi kích thước mượt mà
+            const currentStepHeight = currentStepElement ? currentStepElement.offsetHeight : 0;
+            const newStepHeight = stepElement.offsetHeight;
+            container.style.height = `${Math.max(currentStepHeight, newStepHeight)}px`;
+            container.style.transition = `height ${var_transition_speed} ease-in-out`;
+
+
+            if (currentStepElement) {
+                currentStepElement.classList.remove('active');
+                currentStepElement.classList.add(direction === 'forward' ? 'exit' : 'enter-reverse'); // Thêm class exit/enter-reverse
+                // Chờ animation exit kết thúc rồi mới ẩn hoàn toàn
+                setTimeout(() => {
+                    currentStepElement.style.display = 'none';
+                    if (direction === 'forward') {
+                        currentStepElement.classList.remove('exit');
+                    } else {
+                        currentStepElement.classList.remove('enter-reverse');
+                    }
+                }, parseFloat(getComputedStyle(currentStepElement).transitionDuration) * 1000);
+            }
+
+            stepElement.style.display = 'flex'; // Hiện bước mới
+            // Force reflow để đảm bảo transition được áp dụng
+            void stepElement.offsetWidth; 
+            stepElement.classList.remove('exit', 'enter-reverse'); // Xóa class exit/enter-reverse nếu có
+            stepElement.classList.add('active'); // Thêm class active
+            currentStepElement = stepElement;
             globalMessage.textContent = ''; // Xóa thông báo chung mỗi khi đổi bước
+
+            // Cập nhật chiều cao container sau khi bước mới active hoàn toàn
+            setTimeout(() => {
+                container.style.height = `${stepElement.offsetHeight}px`;
+            }, parseFloat(getComputedStyle(stepElement).transitionDuration) * 1000);
         }
+
+        // --- Logic cho từng bước ---
 
         // Bước 1: Bắt đầu lấy Key
         startButton.addEventListener('click', () => {
-            showStep('captchaContainer');
+            showStep(captchaContainer);
             generateCaptcha();
             captchaInput.focus();
             captchaMessage.textContent = 'Tính toán cho kỹ nha bro!';
@@ -302,16 +414,46 @@
             } else {
                 captchaMessage.textContent = 'Chính xác! Bro thông minh đó =))';
                 captchaMessage.className = 'success';
-                setTimeout(() => startWaiting(), 1000); // Đợi 1 giây rồi chuyển bước
+                setTimeout(() => startDiscordCheck(), 1000); // Đợi 1 giây rồi chuyển bước
             }
         });
 
-        // Bước 3: Đợi 10 giây và tải Key
-        async function startWaiting() {
-            showStep('waitingContainer');
+        // Bước 3: Tham gia Discord (mô phỏng quét)
+        function startDiscordCheck() {
+            showStep(discordContainer);
+            discordCheckSpinner.style.display = 'none'; // Ẩn spinner ban đầu
+            discordCheckMessage.textContent = 'Nhấn nút "Tham gia Discord ngay!" để mở kênh Discord của TuanHaiDz.';
+            discordCheckMessage.className = 'info';
+            confirmDiscordButton.disabled = true; // Vô hiệu hóa nút xác nhận
+
+            // Khi click nút Discord, bắt đầu "quét" (mô phỏng)
+            discordButton.addEventListener('click', () => {
+                discordCheckSpinner.style.display = 'inline-block'; // Hiện spinner
+                discordCheckMessage.textContent = 'Đang giả lập quét để kiểm tra bro đã tham gia Discord chưa...';
+                discordCheckMessage.className = 'warning';
+                
+                // Mô phỏng quá trình quét/kiểm tra Discord trong 5 giây
+                setTimeout(() => {
+                    discordCheckSpinner.style.display = 'none'; // Ẩn spinner
+                    discordCheckMessage.textContent = 'Giả lập quét hoàn tất! Giờ bro có thể xác nhận đã tham gia.';
+                    discordCheckMessage.className = 'success';
+                    confirmDiscordButton.disabled = false; // Kích hoạt nút xác nhận
+                }, 5000); // Giả lập quét 5 giây
+            }, { once: true }); // Chỉ lắng nghe sự kiện click 1 lần
+        }
+
+        confirmDiscordButton.addEventListener('click', () => {
+            if (!confirmDiscordButton.disabled) { // Chỉ xử lý khi nút đã được kích hoạt
+                startWaiting10Sec();
+            }
+        });
+
+        // Bước 4: Đợi 10 giây và tải Key (song song)
+        async function startWaiting10Sec() {
+            showStep(waiting10SecContainer);
             let countdown = 10;
-            waitMessage.innerHTML = `<span class="spinner"></span> Đang chờ ${countdown} giây thần thánh để tải key từ vũ trụ GitHub...`;
-            waitMessage.className = 'warning';
+            wait10SecMessage.innerHTML = `<span class="spinner"></span> Đang chờ ${countdown} giây thần thánh để tải key từ vũ trụ GitHub...`;
+            wait10SecMessage.className = 'warning';
 
             // Bắt đầu tải key ngay lập tức trong khi chờ
             const fetchPromise = fetchKeys();
@@ -319,19 +461,19 @@
             const countdownInterval = setInterval(() => {
                 countdown--;
                 if (countdown >= 0) {
-                    waitMessage.innerHTML = `<span class="spinner"></span> Đang chờ ${countdown} giây thần thánh để tải key từ vũ trụ GitHub...`;
+                    wait10SecMessage.innerHTML = `<span class="spinner"></span> Đang chờ ${countdown} giây thần thánh để tải key từ vũ trụ GitHub...`;
                 }
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
-                    waitMessage.innerHTML = `<span class="spinner"></span> Đã xong 10 giây! Chuẩn bị chuyển bước...`;
+                    wait10SecMessage.innerHTML = `<span class="spinner"></span> Đã xong 10 giây! Chuẩn bị chuyển bước...`;
                     fetchPromise.then(() => {
-                        setTimeout(() => showDiscordButton(), 1000); // Đợi thêm 1 giây cho mượt
+                        setTimeout(() => showPopup5Sec(), 1000); // Đợi thêm 1 giây cho mượt
                     }).catch(error => {
                         globalMessage.textContent = `Ối giời ơi, lỗi khi tải key rồi: ${error.message}. Kêu TuanHaiDz sửa gấp đi!`;
                         globalMessage.className = 'error';
-                        showStep('initialState'); // Quay về bước đầu
-                        stepMessage.textContent = 'Lỗi tải key! Ấn lại để thử nha bro.';
-                        stepMessage.className = 'error';
+                        showStep(initialStateDiv); // Quay về bước đầu
+                        initialMessage.textContent = 'Lỗi tải key! Ấn lại để thử nha bro.';
+                        initialMessage.className = 'error';
                     });
                 }
             }, 1000);
@@ -357,18 +499,27 @@
             }
         }
 
-        // Bước 4: Hiển thị nút Discord
-        function showDiscordButton() {
-            showStep('discordContainer');
-            discordMessage.textContent = 'Ấn nút "Tham gia Discord" rồi xác nhận để lấy key nha bro!';
-            discordMessage.className = 'info';
-            getKeyButton.disabled = false;
+        // Bước 5: Hiển thị Popup Đợi thêm 5 giây
+        function showPopup5Sec() {
+            popup5SecModal.classList.add('show');
+            let countdown = 5;
+            popupCountdown.textContent = countdown;
+
+            const popupInterval = setInterval(() => {
+                countdown--;
+                popupCountdown.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(popupInterval);
+                    popup5SecModal.classList.remove('show');
+                    setTimeout(() => showFinalKey(), 500); // Chờ popup đóng rồi hiện key
+                }
+            }, 1000);
         }
 
-        // Bước 5: Hiển thị Key khi xác nhận Discord
-        getKeyButton.addEventListener('click', () => {
+        // Bước 6: Hiển thị Key
+        function showFinalKey() {
+            showStep(finalKeyContainer);
             if (finalKeyToDisplay) {
-                showStep('finalKeyContainer');
                 finalKeyDisplay.value = finalKeyToDisplay;
                 finalKeyMessage.textContent = 'Đây là key của bro! Sao chép lẹ đi rồi quẩy =))';
                 finalKeyMessage.className = 'success';
@@ -377,9 +528,9 @@
             } else {
                 globalMessage.textContent = 'Ối, chưa có key để hiển thị! Có lỗi gì đó rồi bro.';
                 globalMessage.className = 'error';
-                showStep('initialState'); // Quay về bước đầu
+                showStep(initialStateDiv); // Quay về bước đầu
             }
-        });
+        }
 
         // Hàm copy key vào clipboard
         copyKeyButton.addEventListener('click', async () => {
@@ -395,7 +546,11 @@
         });
 
         // Khởi tạo trạng thái ban đầu khi load trang
-        showStep('initialState');
+        // Đặt chiều cao ban đầu của container dựa trên bước đầu tiên
+        window.addEventListener('load', () => {
+            showStep(initialStateDiv);
+            container.style.height = `${initialStateDiv.offsetHeight}px`;
+        });
     </script>
 </body>
 </html>
